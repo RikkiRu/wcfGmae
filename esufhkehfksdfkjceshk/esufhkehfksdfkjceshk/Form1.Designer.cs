@@ -41,6 +41,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.glControl1 = new OpenTK.GLControl();
+            this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // button2
@@ -148,6 +149,11 @@
             this.glControl1.TabIndex = 12;
             this.glControl1.VSync = false;
             // 
+            // timer2
+            // 
+            this.timer2.Interval = 2000;
+            this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -189,6 +195,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label3;
         private OpenTK.GLControl glControl1;
+        private System.Windows.Forms.Timer timer2;
     }
 }
 

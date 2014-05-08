@@ -120,6 +120,7 @@ namespace esufhkehfksdfkjceshk
                 textBox3.Enabled = false;
                 backgroundWorker1.RunWorkerAsync();
                 timer1.Enabled = true;
+                timer2.Enabled = true;
                 service.say(DateTime.Now.ToShortTimeString() + ") " + textBox2.Text + " connected"); 
             }
             catch
@@ -132,7 +133,7 @@ namespace esufhkehfksdfkjceshk
         private void timer1_Tick(object sender, EventArgs e)
         {
             //method();
-            richTextBox1CHAT.Text = sayString;
+
             this.Text = coordPlayer;
 
             try
@@ -320,6 +321,11 @@ namespace esufhkehfksdfkjceshk
 
             drawQuad(texTank, 100, 100, -100, -100);
             glControl1.SwapBuffers();
+        }
+
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            richTextBox1CHAT.Text = sayString;
         }
 
 
