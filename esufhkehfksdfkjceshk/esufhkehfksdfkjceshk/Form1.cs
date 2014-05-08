@@ -122,6 +122,7 @@ namespace esufhkehfksdfkjceshk
             try
             {
                 string htt = textBox3.Text;
+                if (htt == "") htt = "localhost";
                 tcpUri = new Uri("http://" + htt + "/");
                 address = new EndpointAddress(tcpUri);
                 binding = new BasicHttpBinding();
@@ -190,9 +191,20 @@ namespace esufhkehfksdfkjceshk
                 //timer1.Enabled = false;
                 //textBox1.Text += "Connect to server failed";
             }
+
+
             gr.Clear(Color.White);
+           // gr.ResetTransform();
+
+
+
             foreach (var a in playerslist)
             {
+                if (a.name == textBox2.Text)
+                {
+                   // gr.TranslateTransform(a.x, a.y);
+                }
+
                 Color t = Color.Black;
                 if (a.state == 0) t = Color.Blue;
                 Brush b = new SolidBrush(t);
@@ -212,7 +224,10 @@ namespace esufhkehfksdfkjceshk
                 gr.FillRectangle(Brushes.Red, a.x - 4, a.y - 4, 8, 8);
             }
             pictureBox1.Image = bmp;
+            //gr.ResetTransform();
         }
+
+
 
         private void Form1_KeyPress(object sender, KeyPressEventArgs e)
         {        }

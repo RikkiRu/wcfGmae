@@ -78,7 +78,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(283, 15);
+            this.pictureBox1.Location = new System.Drawing.Point(267, 29);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(351, 241);
@@ -115,10 +115,10 @@
             // 
             // richTextBox1CHAT
             // 
-            this.richTextBox1CHAT.Location = new System.Drawing.Point(19, 155);
+            this.richTextBox1CHAT.Location = new System.Drawing.Point(19, 139);
             this.richTextBox1CHAT.Name = "richTextBox1CHAT";
             this.richTextBox1CHAT.ReadOnly = true;
-            this.richTextBox1CHAT.Size = new System.Drawing.Size(198, 101);
+            this.richTextBox1CHAT.Size = new System.Drawing.Size(198, 147);
             this.richTextBox1CHAT.TabIndex = 7;
             this.richTextBox1CHAT.Text = "";
             this.richTextBox1CHAT.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
@@ -152,7 +152,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(29, 135);
+            this.label3.Location = new System.Drawing.Point(16, 119);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(33, 17);
             this.label3.TabIndex = 11;
