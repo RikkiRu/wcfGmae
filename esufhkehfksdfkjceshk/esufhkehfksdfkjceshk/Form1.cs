@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-//using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.ServiceModel;
 using System.Threading;
+using OpenTK.Graphics.OpenGL;
 
 namespace esufhkehfksdfkjceshk
 {
@@ -67,31 +65,6 @@ namespace esufhkehfksdfkjceshk
                 this.y = y;
                 this.dir = dir;
             }
-
-            public void move()
-            {
-                switch (dir)
-                {
-                    case 0: y -= speed; break;
-                    case 1: x += speed; break;
-                    case 2: y += speed; break;
-                    case 3: x -= speed; break;
-                }
-            }
-
-            public bool explosion(playerclass p)
-            {
-                int dx = 0;
-                int dy = 0;
-                if (p.x > this.x) dx = p.x - this.x;
-                else dx = this.x - p.x;
-                if (p.y > this.y) dy = p.y - this.y;
-                else dy = this.y - p.y;
-
-                if (dx < distToExpl && dy < distToExpl) return true;
-
-                return false;
-            }
         }
 
         public Form1()
@@ -99,8 +72,7 @@ namespace esufhkehfksdfkjceshk
             InitializeComponent();
         }
 
-        static Bitmap bmp = new Bitmap(512, 512);
-        static Graphics gr = Graphics.FromImage(bmp);
+        //------------------------------------------------------------------
         static Uri tcpUri;
         static EndpointAddress address;
         static BasicHttpBinding binding;
@@ -110,8 +82,19 @@ namespace esufhkehfksdfkjceshk
         string sayString="";
         string coordPlayer = "";
 
-        List<playerclass> playerslist = new List<playerclass>();
-        List<bullet> bulletList = new List<bullet>();
+        static List<playerclass> playerslist = new List<playerclass>();
+        static List<bullet> bulletList = new List<bullet>();
+        static Textures texBullet;
+        static Textures texTank;
+        static Image tBullet = Image.FromFile(@"tex/bullet.png");
+        static Image tTank = Image.FromFile(@"tex/tank.png");
+        
+
+        public float ortoX;
+        public float ortoY;
+        //------------------------------------------------------------------
+
+
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -121,6 +104,7 @@ namespace esufhkehfksdfkjceshk
         {
             try
             {
+                if (textBox2.Text == "") textBox2.Text = "unknown";
                 string htt = textBox3.Text;
                 if (htt == "") htt = "localhost";
                 tcpUri = new Uri("http://" + htt + "/");
@@ -129,13 +113,14 @@ namespace esufhkehfksdfkjceshk
                 factory = new ChannelFactory<IMyobject>(binding, address);
                 service = factory.CreateChannel();
                 richTextBox1CHAT.Text += service.GetCommandString(textBox2.Text) + Environment.NewLine;
-                pictureBox1.Visible = true;
                 button2.Enabled = false;
                 textBox2.Enabled = false;
+                
                 playerslist.Clear();
                 textBox3.Enabled = false;
                 backgroundWorker1.RunWorkerAsync();
                 timer1.Enabled = true;
+                service.say(DateTime.Now.ToShortTimeString() + ") " + textBox2.Text + " connected"); 
             }
             catch
             {
@@ -149,13 +134,21 @@ namespace esufhkehfksdfkjceshk
             //method();
             richTextBox1CHAT.Text = sayString;
             this.Text = coordPlayer;
+
+            try
+            {
+                Render();
+                glControl1.SwapBuffers();
+            }
+            catch
+            {
+            }
         }
 
         public void method()
         {
             try
             {
-
                 string x = service.GetCommandString(1).ToString();
                 playerslist.Clear();
                 bulletList.Clear();
@@ -186,48 +179,75 @@ namespace esufhkehfksdfkjceshk
                     bullet b = new bullet(Convert.ToInt32(temp[0]), Convert.ToInt32(temp[1]), Convert.ToInt32(temp[2]));
                     bulletList.Add(b);
                 }
+
+                
             }
             catch
             {
                 //timer1.Enabled = false;
                 //textBox1.Text += "Connect to server failed";
             }
+        }
 
+        void Render()
+        {
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            GL.LoadIdentity();
+            GL.PushMatrix();
 
-            gr.Clear(Color.White);
-            gr.ResetTransform();
             var player = playerslist.Where(c => c.name == textBox2.Text).FirstOrDefault();
-            gr.TranslateTransform(-player.x+200, -player.y+200);
+            int tX = -player.x+50;
+            int tY = -player.y+50;
+            GL.Translate(tX, tY, 0);
             coordPlayer = player.x.ToString() + " " + player.y.ToString();
 
             foreach (var a in playerslist)
             {
-                Color t = Color.Black;
+                Color t = Color.White;
                 if (a.state == 0) t = Color.Blue;
-                Brush b = new SolidBrush(t);
-                gr.FillRectangle(b, a.x - 8, a.y - 8, 16, 16);
+                GL.Color3(t);
+                float angle = a.direction * 90.0f;
 
-                switch (a.direction)
-                {
-                    case 0: gr.FillRectangle(Brushes.Red, a.x - 2, a.y - 12, 4, 10); break;
-                    case 1: gr.FillRectangle(Brushes.Red, a.x + 2, a.y - 2, 10, 4); break;
-                    case 2: gr.FillRectangle(Brushes.Red, a.x - 2, a.y + 2, 4, 10); break;
-                    case 3: gr.FillRectangle(Brushes.Red, a.x - 12, a.y - 2, 10, 4); break;
-                }
-
+                GL.PushMatrix();
+                GL.Translate(a.x, a.y, 0);
+                GL.Rotate(angle, 0, 0, 1);
+                drawQuad(texTank, -4, -4, 4, 4);
+                GL.PopMatrix();
             }
+            GL.Color3(Color.White);
             foreach (var a in bulletList)
             {
-                gr.FillRectangle(Brushes.Red, a.x - 4, a.y - 4, 8, 8);
+                drawQuad(texBullet, a.x - 2, a.y - 2, a.x + 2, a.y + 2);
             }
-            pictureBox1.Image = bmp;
-            //gr.ResetTransform();
+
+            GL.PopMatrix();
         }
 
+        static public void drawQuad(Textures t, float p1x, float p1y, float p2x, float p2y)
+        {
+            t.bind();
+            GL.Begin(BeginMode.Quads);
+            GL.TexCoord2(0, 0); GL.Vertex2(p1x, p1y);
+            GL.TexCoord2(0, 1); GL.Vertex2(p1x, p2y);
+            GL.TexCoord2(1, 1); GL.Vertex2(p2x, p2y);
+            GL.TexCoord2(1, 0); GL.Vertex2(p2x, p1y);
+            GL.End();
+        }
 
-
-        private void Form1_KeyPress(object sender, KeyPressEventArgs e)
-        {        }
+        void matrix(int w, int h)
+        {
+            ortoX = 100;
+            ortoY = 100;
+            if (h == 0) h = 1;
+            float aspect = (float)w / (float)h;
+            GL.Viewport(0, 0, w, h);
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+            if (w < h) { GL.Ortho(0, ortoX, ortoY / aspect, 0, -2, 2); ortoY = ortoY / aspect; }
+            else { GL.Ortho(0, ortoX * aspect, ortoY, 0, -2, 2); ortoX = ortoX * aspect; }
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadIdentity();
+        }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
@@ -274,6 +294,32 @@ namespace esufhkehfksdfkjceshk
         private void Form1_MouseClick(object sender, MouseEventArgs e)
         {
             this.Focus();
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            try
+            {
+                service.say(DateTime.Now.ToShortTimeString() + ") " + textBox2.Text + " disconnected");
+            }
+            catch
+            {
+            }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            GL.ClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+            GL.Enable(EnableCap.Texture2D);
+            GL.Enable(EnableCap.Blend);
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            matrix(glControl1.Width, glControl1.Height);
+
+            texBullet = new Textures(@"tex/bullet.png");
+            texTank = new Textures(@"tex/tank.png");
+
+            drawQuad(texTank, 100, 100, -100, -100);
+            glControl1.SwapBuffers();
         }
 
 

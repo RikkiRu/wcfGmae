@@ -31,7 +31,6 @@
             this.components = new System.ComponentModel.Container();
             this.button2 = new System.Windows.Forms.Button();
             this.textBox2 = new System.Windows.Forms.TextBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.textBox3 = new System.Windows.Forms.TextBox();
@@ -41,7 +40,7 @@
             this.textBox4forSay = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.glControl1 = new OpenTK.GLControl();
             this.SuspendLayout();
             // 
             // button2
@@ -65,18 +64,9 @@
             this.textBox2.TabIndex = 3;
             this.textBox2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Location = new System.Drawing.Point(311, 29);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(582, 421);
-            this.pictureBox1.TabIndex = 4;
-            this.pictureBox1.TabStop = false;
-            // 
             // timer1
             // 
-            this.timer1.Interval = 1000;
+            this.timer1.Interval = 30;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // backgroundWorker1
@@ -148,11 +138,22 @@
             this.label3.TabIndex = 11;
             this.label3.Text = "Чат";
             // 
+            // glControl1
+            // 
+            this.glControl1.BackColor = System.Drawing.Color.Black;
+            this.glControl1.Location = new System.Drawing.Point(296, 29);
+            this.glControl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.glControl1.Name = "glControl1";
+            this.glControl1.Size = new System.Drawing.Size(599, 381);
+            this.glControl1.TabIndex = 12;
+            this.glControl1.VSync = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(930, 567);
+            this.Controls.Add(this.glControl1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.textBox4forSay);
@@ -160,15 +161,15 @@
             this.Controls.Add(this.richTextBox1CHAT);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox3);
-            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.button2);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseClick);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -178,7 +179,6 @@
 
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Timer timer1;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.TextBox textBox3;
@@ -188,6 +188,7 @@
         private System.Windows.Forms.TextBox textBox4forSay;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label3;
+        private OpenTK.GLControl glControl1;
     }
 }
 
