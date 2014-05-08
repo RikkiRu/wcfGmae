@@ -97,10 +97,9 @@ namespace esufhkehfksdfkjceshk
         public Form1()
         {
             InitializeComponent();
-            textBox1.Enabled = false;
         }
 
-        static Bitmap bmp = new Bitmap(256, 256);
+        static Bitmap bmp = new Bitmap(512, 512);
         static Graphics gr = Graphics.FromImage(bmp);
         static Uri tcpUri;
         static EndpointAddress address;
@@ -109,6 +108,7 @@ namespace esufhkehfksdfkjceshk
         static IMyobject service;
 
         string sayString="";
+        string coordPlayer = "";
 
         List<playerclass> playerslist = new List<playerclass>();
         List<bullet> bulletList = new List<bullet>();
@@ -128,7 +128,7 @@ namespace esufhkehfksdfkjceshk
                 binding = new BasicHttpBinding();
                 factory = new ChannelFactory<IMyobject>(binding, address);
                 service = factory.CreateChannel();
-                textBox1.Text += service.GetCommandString(textBox2.Text) + Environment.NewLine;
+                richTextBox1CHAT.Text += service.GetCommandString(textBox2.Text) + Environment.NewLine;
                 pictureBox1.Visible = true;
                 button2.Enabled = false;
                 textBox2.Enabled = false;
@@ -139,7 +139,7 @@ namespace esufhkehfksdfkjceshk
             }
             catch
             {
-                textBox1.Text += "Connect to server failed";
+                richTextBox1CHAT.Text += "Connect to server failed"+Environment.NewLine;
             }
             
         }
@@ -148,6 +148,7 @@ namespace esufhkehfksdfkjceshk
         {
             //method();
             richTextBox1CHAT.Text = sayString;
+            this.Text = coordPlayer;
         }
 
         public void method()
@@ -159,7 +160,7 @@ namespace esufhkehfksdfkjceshk
                 playerslist.Clear();
                 bulletList.Clear();
 
-                string[] x2 = x.Split('!');
+                string[] x2 = x.Split('&');
                 string[] allPla = x2[0].Split('\n');
                 string[] allBull = x2[1].Split('\n');
                 sayString = x2[2];
@@ -194,17 +195,13 @@ namespace esufhkehfksdfkjceshk
 
 
             gr.Clear(Color.White);
-           // gr.ResetTransform();
-
-
+            gr.ResetTransform();
+            var player = playerslist.Where(c => c.name == textBox2.Text).FirstOrDefault();
+            gr.TranslateTransform(-player.x+200, -player.y+200);
+            coordPlayer = player.x.ToString() + " " + player.y.ToString();
 
             foreach (var a in playerslist)
             {
-                if (a.name == textBox2.Text)
-                {
-                   // gr.TranslateTransform(a.x, a.y);
-                }
-
                 Color t = Color.Black;
                 if (a.state == 0) t = Color.Blue;
                 Brush b = new SolidBrush(t);
@@ -271,6 +268,7 @@ namespace esufhkehfksdfkjceshk
         private void button1_Click_1(object sender, EventArgs e)
         {
             service.say(textBox2.Text+": "+textBox4forSay.Text);
+            textBox4forSay.Text = "";
         }
 
         private void Form1_MouseClick(object sender, MouseEventArgs e)

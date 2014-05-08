@@ -72,7 +72,8 @@ namespace CommunicationInterface
             public int dir;
             const int speed = 5;
             const int distToExpl = 5;
-
+            public int lifetime = 30;
+            public bool forDelele = false;
 
             public bullet(int x, int y, int dir)
             {
@@ -83,6 +84,8 @@ namespace CommunicationInterface
 
             public void move()
             {
+                lifetime--;
+                if (lifetime < 0) forDelele = true;
                 switch (dir)
                 {
                     case 0: y-=speed; break;
@@ -117,6 +120,7 @@ namespace CommunicationInterface
         {
             playerclass find = playerslist.Where(c => c.name == name).FirstOrDefault();
             if (find == null) return;
+            if (find.state == 0) return;
             bulletlist.Add(new bullet(find.x, find.y, find.direction));
         }
 
@@ -142,7 +146,7 @@ namespace CommunicationInterface
             string res = "";
             for (int i = 0; i < x.Length; i++)
             {
-                if (x[i] != '!') res += x[i];
+                if (x[i] != '&') res += x[i];
             }
             Console.WriteLine(res);
             sayList+=res+Environment.NewLine;
@@ -167,7 +171,7 @@ namespace CommunicationInterface
             switch (Convert.ToInt32(i))
             {
                 case 1: Console.WriteLine(" - запрос списка игроков"+DateTime.Now.ToString());
-                    string abv = MyObject.retPlayerList() + "!" + MyObject.retBullet() + "!" + MyObject.sayList;
+                    string abv = MyObject.retPlayerList() + "&" + MyObject.retBullet() + "&" + MyObject.sayList;
                     //Console.WriteLine(abv);
                     return abv;
                 default:
@@ -202,6 +206,14 @@ namespace CommunicationInterface
                    }
                }
            }
+
+           for (int i = bulletlist.Count - 1; i >= 0; i--)
+           {
+               if (bulletlist[i].forDelele)
+               {
+                   bulletlist.Remove(bulletlist[i]);
+               }
+           }
         }
     }
 }
@@ -223,7 +235,7 @@ namespace Server
             Console.WriteLine("Сервер запущен");
 
 
-            Timer time = new Timer(100);
+            Timer time = new Timer(30);
             time.Elapsed += new ElapsedEventHandler(MyObject.work);
             time.Start();
 
