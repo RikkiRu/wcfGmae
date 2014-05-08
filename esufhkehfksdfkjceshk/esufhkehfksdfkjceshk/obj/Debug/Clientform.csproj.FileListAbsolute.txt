@@ -7,3 +7,12 @@ C:\Users\Игорь\Desktop\wcfgame\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\ob
 C:\Users\Игорь\Desktop\wcfgame\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\obj\Debug\Clientform.csproj.GenerateResource.Cache
 C:\Users\Игорь\Desktop\wcfgame\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\obj\Debug\esufhkehfksdfkjceshk.exe
 C:\Users\Игорь\Desktop\wcfgame\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\obj\Debug\esufhkehfksdfkjceshk.pdb
+C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgame2\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\bin\Debug\esufhkehfksdfkjceshk.exe.config
+C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgame2\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\obj\Debug\esufhkehfksdfkjceshk.exe
+C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgame2\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\obj\Debug\esufhkehfksdfkjceshk.pdb
+C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgame2\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\bin\Debug\esufhkehfksdfkjceshk.exe
+C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgame2\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\bin\Debug\esufhkehfksdfkjceshk.pdb
+C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgame2\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\obj\Debug\Clientform.csprojResolveAssemblyReference.cache
+C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgame2\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\obj\Debug\esufhkehfksdfkjceshk.Form1.resources
+C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgame2\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\obj\Debug\esufhkehfksdfkjceshk.Properties.Resources.resources
+C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgame2\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\obj\Debug\Clientform.csproj.GenerateResource.Cache

@@ -13,3 +13,8 @@ C:\Users\Игорь\Desktop\wcfgame\CommunicationInterface\CommunicationInterfac
 C:\Users\Игорь\Desktop\wcfgame\CommunicationInterface\CommunicationInterface\obj\Debug\CommunicationInterface.pdb
 C:\Users\Игорь\Desktop\wcfgame\CommunicationInterface\CommunicationInterface\bin\Debug\CommunicationInterface.dll
 C:\Users\Игорь\Desktop\wcfgame\CommunicationInterface\CommunicationInterface\bin\Debug\CommunicationInterface.pdb
+C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgame2\CommunicationInterface\CommunicationInterface\bin\Debug\CommunicationInterface.dll
+C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgame2\CommunicationInterface\CommunicationInterface\bin\Debug\CommunicationInterface.pdb
+C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgame2\CommunicationInterface\CommunicationInterface\obj\Debug\CommunicationInterface.csprojResolveAssemblyReference.cache
+C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgame2\CommunicationInterface\CommunicationInterface\obj\Debug\CommunicationInterface.dll
+C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgame2\CommunicationInterface\CommunicationInterface\obj\Debug\CommunicationInterface.pdb

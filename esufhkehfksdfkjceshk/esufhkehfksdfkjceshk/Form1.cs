@@ -25,6 +25,8 @@ namespace esufhkehfksdfkjceshk
         void CreateBullet(string name, int dir);
         [OperationContract]
         int state(string name);
+        [OperationContract]
+        void say(string say);
     }
 
    
@@ -105,6 +107,9 @@ namespace esufhkehfksdfkjceshk
         static BasicHttpBinding binding;
         static ChannelFactory<IMyobject> factory;
         static IMyobject service;
+
+        string sayString="";
+
         List<playerclass> playerslist = new List<playerclass>();
         List<bullet> bulletList = new List<bullet>();
 
@@ -114,14 +119,14 @@ namespace esufhkehfksdfkjceshk
 
         private void button2_Click(object sender, EventArgs e)
         {
-            try 
+            try
             {
                 string htt = textBox3.Text;
-                tcpUri = new Uri("http://"+htt+"/");
-         address = new EndpointAddress(tcpUri);
-         binding = new BasicHttpBinding();
-         factory = new ChannelFactory<IMyobject>(binding, address);
-        service = factory.CreateChannel();
+                tcpUri = new Uri("http://" + htt + "/");
+                address = new EndpointAddress(tcpUri);
+                binding = new BasicHttpBinding();
+                factory = new ChannelFactory<IMyobject>(binding, address);
+                service = factory.CreateChannel();
                 textBox1.Text += service.GetCommandString(textBox2.Text) + Environment.NewLine;
                 pictureBox1.Visible = true;
                 button2.Enabled = false;
@@ -129,19 +134,21 @@ namespace esufhkehfksdfkjceshk
                 playerslist.Clear();
                 textBox3.Enabled = false;
                 backgroundWorker1.RunWorkerAsync();
-                //timer1.Enabled = true;
+                timer1.Enabled = true;
             }
-            catch 
+            catch
             {
-                textBox1.Text += "Connect to server failed";  
+                textBox1.Text += "Connect to server failed";
             }
             
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            method();
+            //method();
+            richTextBox1CHAT.Text = sayString;
         }
+
         public void method()
         {
             try
@@ -154,6 +161,7 @@ namespace esufhkehfksdfkjceshk
                 string[] x2 = x.Split('!');
                 string[] allPla = x2[0].Split('\n');
                 string[] allBull = x2[1].Split('\n');
+                sayString = x2[2];
 
                 for (int i = 0; i < allPla.GetLength(0); i++)
                 {
@@ -176,12 +184,11 @@ namespace esufhkehfksdfkjceshk
                     bullet b = new bullet(Convert.ToInt32(temp[0]), Convert.ToInt32(temp[1]), Convert.ToInt32(temp[2]));
                     bulletList.Add(b);
                 }
-
             }
             catch
             {
-                timer1.Enabled = false;
-                textBox1.Text += "Connect to server failed";
+                //timer1.Enabled = false;
+                //textBox1.Text += "Connect to server failed";
             }
             gr.Clear(Color.White);
             foreach (var a in playerslist)
@@ -206,11 +213,13 @@ namespace esufhkehfksdfkjceshk
             }
             pictureBox1.Image = bmp;
         }
+
         private void Form1_KeyPress(object sender, KeyPressEventArgs e)
         {        }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
+            if (button2.Enabled) return;
             switch (e.KeyCode)
             {
                 case Keys.W:
@@ -242,6 +251,16 @@ namespace esufhkehfksdfkjceshk
         {
             backgroundWorker1.RunWorkerAsync();
             
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            service.say(textBox2.Text+": "+textBox4forSay.Text);
+        }
+
+        private void Form1_MouseClick(object sender, MouseEventArgs e)
+        {
+            this.Focus();
         }
 
 

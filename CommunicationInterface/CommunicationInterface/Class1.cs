@@ -20,5 +20,7 @@ namespace CommunicationInterface
         void CreateBullet(string name, int dir);
         [OperationContract]
         int state(string name);
+        [OperationContract]
+        void say(string say);
     }
 }

@@ -13,6 +13,8 @@ namespace CommunicationInterface
     {
         public static List<playerclass> playerslist = new List<playerclass>();
         public static List<bullet> bulletlist = new List<bullet>();
+        public static string sayList="";
+        public static int sayCount=0;
 
         public static string retPlayerList()
         {
@@ -130,6 +132,23 @@ namespace CommunicationInterface
             }
         }
 
+        public void say(string x)
+        {
+            if (sayCount > 5)
+            {
+                sayList = "";
+                sayCount = 0;
+            }
+            string res = "";
+            for (int i = 0; i < x.Length; i++)
+            {
+                if (x[i] != '!') res += x[i];
+            }
+            Console.WriteLine(res);
+            sayList+=res+Environment.NewLine;
+            sayCount++;
+        }
+
         public void MoveY(string name, int y)
         {
             playerclass find = playerslist.Where(c => c.name == name).FirstOrDefault();
@@ -148,7 +167,9 @@ namespace CommunicationInterface
             switch (Convert.ToInt32(i))
             {
                 case 1: Console.WriteLine(" - запрос списка игроков"+DateTime.Now.ToString());
-                    return MyObject.retPlayerList() + "!" + MyObject.retBullet();
+                    string abv = MyObject.retPlayerList() + "!" + MyObject.retBullet() + "!" + MyObject.sayList;
+                    //Console.WriteLine(abv);
+                    return abv;
                 default:
                     return "Получил " + Convert.ToString(i);
                     
@@ -195,10 +216,11 @@ namespace Server
             //ServiceHost host = new ServiceHost(typeof(MyObject), new Uri("http://19/"));
             string http;
             http = Console.ReadLine();
+            if (http == "") http = "localhost";
             ServiceHost host = new ServiceHost(typeof(MyObject), new Uri("http://"+http+"/"));
             host.AddServiceEndpoint(typeof(IMyobject), new BasicHttpBinding(), "");
             host.Open();
-            Console.WriteLine("Сервер запуще222н");
+            Console.WriteLine("Сервер запущен");
 
 
             Timer time = new Timer(100);
