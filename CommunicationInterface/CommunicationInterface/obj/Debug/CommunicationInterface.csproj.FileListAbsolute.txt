@@ -1,0 +1,15 @@
+c:\users\игорь\documents\visual studio 2012\Projects\CommunicationInterface\CommunicationInterface\bin\Debug\CommunicationInterface.dll
+c:\users\игорь\documents\visual studio 2012\Projects\CommunicationInterface\CommunicationInterface\bin\Debug\CommunicationInterface.pdb
+c:\users\игорь\documents\visual studio 2012\Projects\CommunicationInterface\CommunicationInterface\obj\Debug\CommunicationInterface.csprojResolveAssemblyReference.cache
+c:\users\игорь\documents\visual studio 2012\Projects\CommunicationInterface\CommunicationInterface\obj\Debug\CommunicationInterface.dll
+c:\users\игорь\documents\visual studio 2012\Projects\CommunicationInterface\CommunicationInterface\obj\Debug\CommunicationInterface.pdb
+H:\wcfgame\CommunicationInterface\CommunicationInterface\bin\Debug\CommunicationInterface.dll
+H:\wcfgame\CommunicationInterface\CommunicationInterface\bin\Debug\CommunicationInterface.pdb
+H:\wcfgame\CommunicationInterface\CommunicationInterface\obj\Debug\CommunicationInterface.csprojResolveAssemblyReference.cache
+H:\wcfgame\CommunicationInterface\CommunicationInterface\obj\Debug\CommunicationInterface.dll
+H:\wcfgame\CommunicationInterface\CommunicationInterface\obj\Debug\CommunicationInterface.pdb
+C:\Users\Игорь\Desktop\wcfgame\CommunicationInterface\CommunicationInterface\obj\Debug\CommunicationInterface.csprojResolveAssemblyReference.cache
+C:\Users\Игорь\Desktop\wcfgame\CommunicationInterface\CommunicationInterface\obj\Debug\CommunicationInterface.dll
+C:\Users\Игорь\Desktop\wcfgame\CommunicationInterface\CommunicationInterface\obj\Debug\CommunicationInterface.pdb
+C:\Users\Игорь\Desktop\wcfgame\CommunicationInterface\CommunicationInterface\bin\Debug\CommunicationInterface.dll
+C:\Users\Игорь\Desktop\wcfgame\CommunicationInterface\CommunicationInterface\bin\Debug\CommunicationInterface.pdb

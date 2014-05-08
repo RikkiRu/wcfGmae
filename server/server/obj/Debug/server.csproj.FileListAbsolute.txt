@@ -1,0 +1,24 @@
+c:\users\игорь\documents\visual studio 2012\Projects\server\server\bin\Debug\server.exe.config
+c:\users\игорь\documents\visual studio 2012\Projects\server\server\obj\Debug\server.csprojResolveAssemblyReference.cache
+C:\Users\Игорь\Documents\Visual Studio 2012\Projects\server\server\bin\Debug\server.exe
+C:\Users\Игорь\Documents\Visual Studio 2012\Projects\server\server\bin\Debug\server.pdb
+C:\Users\Игорь\Documents\Visual Studio 2012\Projects\server\server\bin\Debug\CommunicationInterface.dll
+C:\Users\Игорь\Documents\Visual Studio 2012\Projects\server\server\bin\Debug\CommunicationInterface.pdb
+C:\Users\Игорь\Documents\Visual Studio 2012\Projects\server\server\obj\Debug\server.exe
+C:\Users\Игорь\Documents\Visual Studio 2012\Projects\server\server\obj\Debug\server.pdb
+H:\wcfgame\server\server\bin\Debug\server.exe.config
+H:\wcfgame\server\server\obj\Debug\server.exe
+H:\wcfgame\server\server\obj\Debug\server.pdb
+H:\wcfgame\server\server\bin\Debug\server.exe
+H:\wcfgame\server\server\bin\Debug\server.pdb
+H:\wcfgame\server\server\bin\Debug\CommunicationInterface.dll
+H:\wcfgame\server\server\bin\Debug\CommunicationInterface.pdb
+H:\wcfgame\server\server\obj\Debug\server.csprojResolveAssemblyReference.cache
+C:\Users\Игорь\Desktop\wcfgame\server\server\bin\Debug\server.exe.config
+C:\Users\Игорь\Desktop\wcfgame\server\server\obj\Debug\server.exe
+C:\Users\Игорь\Desktop\wcfgame\server\server\obj\Debug\server.pdb
+C:\Users\Игорь\Desktop\wcfgame\server\server\bin\Debug\server.exe
+C:\Users\Игорь\Desktop\wcfgame\server\server\bin\Debug\server.pdb
+C:\Users\Игорь\Desktop\wcfgame\server\server\bin\Debug\CommunicationInterface.dll
+C:\Users\Игорь\Desktop\wcfgame\server\server\bin\Debug\CommunicationInterface.pdb
+C:\Users\Игорь\Desktop\wcfgame\server\server\obj\Debug\server.csprojResolveAssemblyReference.cache
