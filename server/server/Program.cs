@@ -234,9 +234,13 @@ namespace CommunicationInterface
             if (find.state != 0)
             {
                 if (find == null) return;
+
+                int dir = 0;
+                if (x > 0) dir = 1;
+                else dir = 3;
+
                 find.tryMove(x, 0);
-                if (x > 0) find.direction = 1;
-                else find.direction = 3;
+                find.direction = dir;
             }
         }
 
@@ -263,9 +267,14 @@ namespace CommunicationInterface
             if (find.state != 0)
             {
                 if (find == null) return;
+
+                int dir = 0;
+                
+                if (y > 0) dir = 2;
+                else dir = 0;
+
                 find.tryMove(0, y);
-                if (y > 0) find.direction = 2;
-                else find.direction = 0;
+                find.direction = dir;
             }
         }
 

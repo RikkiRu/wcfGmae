@@ -153,6 +153,7 @@ namespace esufhkehfksdfkjceshk
                 timer2.Enabled = true;
                 service.say(DateTime.Now.ToShortTimeString() + " ) " + textBox2_nickname.Text + " connected");
                 glControl1.Focus();
+                panel2.Visible = false;
             }
             catch
             {
@@ -245,8 +246,8 @@ namespace esufhkehfksdfkjceshk
             GL.LoadIdentity();
 
             var player = playerslist.Where(c => c.name == textBox2_nickname.Text).FirstOrDefault();
-            int tX = -player.x+50;
-            int tY = -player.y+50;
+            int tX = -player.x+(int)ortoX/2;
+            int tY = -player.y+(int)ortoY/2;
             GL.Translate(tX, tY, 0);
             coordPlayer = player.x.ToString() + " " + player.y.ToString();
 
@@ -383,6 +384,8 @@ namespace esufhkehfksdfkjceshk
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            this.WindowState = FormWindowState.Maximized;
+
             GL.ClearColor(0.3f, 0.7f, 0.4f, 1.0f);
             GL.Enable(EnableCap.Texture2D);
             GL.Enable(EnableCap.Blend);
@@ -397,6 +400,8 @@ namespace esufhkehfksdfkjceshk
             waveOut.Init(loop);
             waveOut.Play();
             waveOut.Pause();
+
+            glControl1.SwapBuffers();
         }
 
         private void timer2_Tick(object sender, EventArgs e)
@@ -426,6 +431,12 @@ namespace esufhkehfksdfkjceshk
             fpl.Show();
             glControl1.Focus();
             fpl.Focus();
+        }
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            matrix(glControl1.Width, glControl1.Height);
+            glControl1.SwapBuffers();
         }
 
 
