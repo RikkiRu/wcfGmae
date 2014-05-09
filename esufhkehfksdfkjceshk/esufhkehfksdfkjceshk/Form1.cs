@@ -110,6 +110,7 @@ namespace esufhkehfksdfkjceshk
         static Textures texBullet;
         static Textures texTank;
         static List<Textures> texBlocks=new List<Textures>();
+      
 
         public float ortoX;
         public float ortoY;
@@ -168,8 +169,9 @@ namespace esufhkehfksdfkjceshk
                 Render();
                 glControl1.SwapBuffers();
             }
-            catch
+            catch (Exception ex)
             {
+                sayString += ex.Message;
             }
         }
 
@@ -178,9 +180,11 @@ namespace esufhkehfksdfkjceshk
             try
             {
                 string x = service.GetCommandString(1, textBox2_nickname.Text).ToString();
+
                 playerslist.Clear();
                 bulletList.Clear();
                 blockList.Clear();
+
                 string[] x2 = x.Split('&');
                 string[] allPla = x2[0].Split('\n');
                 string[] allBull = x2[1].Split('\n');
@@ -228,7 +232,6 @@ namespace esufhkehfksdfkjceshk
         {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.LoadIdentity();
-            GL.PushMatrix();
 
             var player = playerslist.Where(c => c.name == textBox2_nickname.Text).FirstOrDefault();
             int tX = -player.x+50;
@@ -248,21 +251,22 @@ namespace esufhkehfksdfkjceshk
                 GL.Color3(t);
                 float angle = a.direction * 90.0f;
 
-                GL.PushMatrix();
+                GL.LoadIdentity();
+                GL.Translate(tX, tY, 0);
                 GL.Translate(a.x, a.y, 0);
                 GL.Rotate(angle, 0, 0, 1);
                 drawQuad(texTank, -mainSize, -mainSize, mainSize, mainSize);
-                GL.PopMatrix();
+                   
             }
 
+            GL.LoadIdentity();
+            GL.Translate(tX, tY, 0);
             GL.Color3(Color.White);
 
             foreach (var a in bulletList)
             {
                 drawQuad(texBullet, a.x - 2, a.y - 2, a.x + 2, a.y + 2);
             }
-
-            GL.PopMatrix();
         }
 
         static public void drawQuad(Textures t, float p1x, float p1y, float p2x, float p2y)
@@ -293,33 +297,42 @@ namespace esufhkehfksdfkjceshk
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (button2.Enabled) return;
-            switch (e.KeyCode)
+            try
             {
-                case Keys.W:
-                    service.MoveY(textBox2_nickname.Text, -5);
-                    if(waveOut.PlaybackState==PlaybackState.Paused) waveOut.Play();
-                    break;
-                case Keys.S:
-                    service.MoveY(textBox2_nickname.Text, 5);
-                    if (waveOut.PlaybackState == PlaybackState.Paused) waveOut.Play();
-                    break;
-                case Keys.A:
-                    service.MoveX(textBox2_nickname.Text, -5);
-                    if (waveOut.PlaybackState == PlaybackState.Paused) waveOut.Play();
-                    break;
-                case Keys.D:
-                    service.MoveX(textBox2_nickname.Text, 5);
-                    if (waveOut.PlaybackState == PlaybackState.Paused) waveOut.Play();
-                    break;
-                case Keys.Space:
-                    service.CreateBullet(textBox2_nickname.Text, 0);
-                    AudioPlaybackEngine.Instance.PlaySound(SoundFire);
-                    break;
-                case Keys.Q:
-                    service.addBlock(textBox2_nickname.Text, 0);
-                    break;
+                if (button2.Enabled) return;
+                var player = playerslist.Where(c => c.name == textBox2_nickname.Text).FirstOrDefault();
+                if (player == null) return;
+                if (player.state == 0) return;
+
+                switch (e.KeyCode)
+                {
+                    case Keys.W:
+                        service.MoveY(textBox2_nickname.Text, -5);
+                        if (waveOut.PlaybackState == PlaybackState.Paused) waveOut.Play();
+                        break;
+                    case Keys.S:
+                        service.MoveY(textBox2_nickname.Text, 5);
+                        if (waveOut.PlaybackState == PlaybackState.Paused) waveOut.Play();
+                        break;
+                    case Keys.A:
+                        service.MoveX(textBox2_nickname.Text, -5);
+                        if (waveOut.PlaybackState == PlaybackState.Paused) waveOut.Play();
+                        break;
+                    case Keys.D:
+                        service.MoveX(textBox2_nickname.Text, 5);
+                        if (waveOut.PlaybackState == PlaybackState.Paused) waveOut.Play();
+                        break;
+                    case Keys.Space:
+                        service.CreateBullet(textBox2_nickname.Text, 0);
+                        AudioPlaybackEngine.Instance.PlaySound(SoundFire);
+                        break;
+                    case Keys.Q:
+                        service.addBlock(textBox2_nickname.Text, 0);
+                        break;
+                }
             }
+            catch
+            { }
         }
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)

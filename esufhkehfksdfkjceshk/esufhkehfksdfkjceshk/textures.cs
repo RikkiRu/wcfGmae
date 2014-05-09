@@ -14,6 +14,17 @@ namespace esufhkehfksdfkjceshk
         public Textures(string way)
         {
             Bitmap Ibm = new Bitmap(way);
+            genTex(Ibm);
+        }
+
+        public Textures(Bitmap bitmap)
+        {
+            genTex(bitmap);
+        }
+
+        void genTex(Bitmap bitmap)
+        {
+            Bitmap Ibm = bitmap;
             text = GL.GenTexture();
             bind();
             width = Ibm.Width;
