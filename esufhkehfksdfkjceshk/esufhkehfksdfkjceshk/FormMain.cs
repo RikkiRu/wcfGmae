@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using System.ServiceModel;
 using System.Threading;
 using OpenTK.Graphics.OpenGL;
-using NAudio;
 using NAudio.Wave;
 
 namespace esufhkehfksdfkjceshk
@@ -35,7 +34,7 @@ namespace esufhkehfksdfkjceshk
 
    
 
-    public partial class Form1 : Form
+    public partial class FormMain : Form
     {
         public class playerclass
         {
@@ -89,7 +88,7 @@ namespace esufhkehfksdfkjceshk
             }
         }
 
-        public Form1()
+        public FormMain()
         {
             InitializeComponent();
         }
