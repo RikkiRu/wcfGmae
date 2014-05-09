@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.button2 = new System.Windows.Forms.Button();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textBox2_nickname = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.textBox3 = new System.Windows.Forms.TextBox();
@@ -56,14 +56,14 @@
             this.button2.Click += new System.EventHandler(this.button2_Click);
             this.button2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             // 
-            // textBox2
+            // textBox2_nickname
             // 
-            this.textBox2.Location = new System.Drawing.Point(675, 523);
-            this.textBox2.Margin = new System.Windows.Forms.Padding(4);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(132, 22);
-            this.textBox2.TabIndex = 3;
-            this.textBox2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
+            this.textBox2_nickname.Location = new System.Drawing.Point(675, 523);
+            this.textBox2_nickname.Margin = new System.Windows.Forms.Padding(4);
+            this.textBox2_nickname.Name = "textBox2_nickname";
+            this.textBox2_nickname.Size = new System.Drawing.Size(132, 22);
+            this.textBox2_nickname.TabIndex = 3;
+            this.textBox2_nickname.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             // 
             // timer1
             // 
@@ -145,9 +145,10 @@
             this.glControl1.Location = new System.Drawing.Point(296, 29);
             this.glControl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.glControl1.Name = "glControl1";
-            this.glControl1.Size = new System.Drawing.Size(599, 381);
+            this.glControl1.Size = new System.Drawing.Size(600, 400);
             this.glControl1.TabIndex = 12;
             this.glControl1.VSync = false;
+            this.glControl1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             // 
             // timer2
             // 
@@ -167,7 +168,7 @@
             this.Controls.Add(this.richTextBox1CHAT);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox3);
-            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.textBox2_nickname);
             this.Controls.Add(this.button2);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
@@ -184,7 +185,7 @@
         #endregion
 
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox textBox2_nickname;
         private System.Windows.Forms.Timer timer1;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.TextBox textBox3;

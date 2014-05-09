@@ -7,6 +7,8 @@ using System.Windows.Forms;
 using System.ServiceModel;
 using System.Threading;
 using OpenTK.Graphics.OpenGL;
+using NAudio;
+using NAudio.Wave;
 
 namespace esufhkehfksdfkjceshk
 {
@@ -14,7 +16,7 @@ namespace esufhkehfksdfkjceshk
     public interface IMyobject
     {
         [OperationContract]
-        object GetCommandString(object i);
+        object GetCommandString(object i, string player);
         [OperationContract]
         void MoveX(string name, int x);
         [OperationContract]
@@ -25,6 +27,8 @@ namespace esufhkehfksdfkjceshk
         int state(string name);
         [OperationContract]
         void say(string say);
+        [OperationContract]
+        void addBlock(string name, int type);
     }
 
    
@@ -67,6 +71,22 @@ namespace esufhkehfksdfkjceshk
             }
         }
 
+        public class block
+        {
+            public int x;
+            public int y;
+            public int type;
+            public int lifes = 5;
+            public bool forDelete = false;
+
+            public block(int x, int y, int type)
+            {
+                this.x = x;
+                this.y = y;
+                this.type = type;
+            }
+        }
+
         public Form1()
         {
             InitializeComponent();
@@ -81,17 +101,23 @@ namespace esufhkehfksdfkjceshk
 
         string sayString="";
         string coordPlayer = "";
+        static int mainSize = 8;
 
         static List<playerclass> playerslist = new List<playerclass>();
         static List<bullet> bulletList = new List<bullet>();
+        static List<block> blockList = new List<block>();
+
         static Textures texBullet;
         static Textures texTank;
-        static Image tBullet = Image.FromFile(@"tex/bullet.png");
-        static Image tTank = Image.FromFile(@"tex/tank.png");
-        
+        static List<Textures> texBlocks=new List<Textures>();
 
         public float ortoX;
         public float ortoY;
+
+        LoopStream loop = new LoopStream(new WaveFileReader(@"sound/move.wav"));
+        WaveOut waveOut = new WaveOut();
+        static CachedSound SoundFire = new CachedSound(@"sound/fire.wav");
+       
         //------------------------------------------------------------------
 
 
@@ -104,7 +130,7 @@ namespace esufhkehfksdfkjceshk
         {
             try
             {
-                if (textBox2.Text == "") textBox2.Text = "unknown";
+                if (textBox2_nickname.Text == "") textBox2_nickname.Text = "unknown";
                 string htt = textBox3.Text;
                 if (htt == "") htt = "localhost";
                 tcpUri = new Uri("http://" + htt + "/");
@@ -112,16 +138,17 @@ namespace esufhkehfksdfkjceshk
                 binding = new BasicHttpBinding();
                 factory = new ChannelFactory<IMyobject>(binding, address);
                 service = factory.CreateChannel();
-                richTextBox1CHAT.Text += service.GetCommandString(textBox2.Text) + Environment.NewLine;
+                richTextBox1CHAT.Text += service.GetCommandString(textBox2_nickname.Text, "") + Environment.NewLine;
                 button2.Enabled = false;
-                textBox2.Enabled = false;
+                textBox2_nickname.Enabled = false;
                 
                 playerslist.Clear();
                 textBox3.Enabled = false;
                 backgroundWorker1.RunWorkerAsync();
                 timer1.Enabled = true;
                 timer2.Enabled = true;
-                service.say(DateTime.Now.ToShortTimeString() + ") " + textBox2.Text + " connected"); 
+                service.say(DateTime.Now.ToShortTimeString() + ") " + textBox2_nickname.Text + " connected");
+                glControl1.Focus();
             }
             catch
             {
@@ -150,18 +177,19 @@ namespace esufhkehfksdfkjceshk
         {
             try
             {
-                string x = service.GetCommandString(1).ToString();
+                string x = service.GetCommandString(1, textBox2_nickname.Text).ToString();
                 playerslist.Clear();
                 bulletList.Clear();
-
+                blockList.Clear();
                 string[] x2 = x.Split('&');
                 string[] allPla = x2[0].Split('\n');
                 string[] allBull = x2[1].Split('\n');
                 sayString = x2[2];
+                string[] allBlock = x2[3].Split('\n');
 
                 for (int i = 0; i < allPla.GetLength(0); i++)
                 {
-                    if (allPla[i] == "") continue;
+                    if (allPla[i] == "" || allPla[i]==" ") continue;
                     string[] temp = allPla[i].Split('\t');
                     playerclass p = new playerclass(temp[0]);
                     p.state = Convert.ToInt32(temp[1]);
@@ -174,19 +202,25 @@ namespace esufhkehfksdfkjceshk
 
                 for (int i = 0; i < allBull.GetLength(0); i++)
                 {
-                    if (allBull[i] == "") continue;
+                    if (allBull[i] == "" || allBull[i] == " ") continue;
 
                     string[] temp = allBull[i].Split('\t');
                     bullet b = new bullet(Convert.ToInt32(temp[0]), Convert.ToInt32(temp[1]), Convert.ToInt32(temp[2]));
                     bulletList.Add(b);
                 }
 
+                for (int i = 0; i < allBlock.GetLength(0); i++)
+                {
+                    if (allBlock[i] == "" || allBlock[i] == " ") continue;
+                    string[] temp = allBlock[i].Split('\t');
+                    block b = new block(Convert.ToInt32(temp[0]), Convert.ToInt32(temp[1]), Convert.ToInt32(temp[2]));
+                    blockList.Add(b);
+                }
                 
             }
-            catch
+            catch (Exception ex)
             {
-                //timer1.Enabled = false;
-                //textBox1.Text += "Connect to server failed";
+                sayString += ex.Message + Environment.NewLine;
             }
         }
 
@@ -196,11 +230,16 @@ namespace esufhkehfksdfkjceshk
             GL.LoadIdentity();
             GL.PushMatrix();
 
-            var player = playerslist.Where(c => c.name == textBox2.Text).FirstOrDefault();
+            var player = playerslist.Where(c => c.name == textBox2_nickname.Text).FirstOrDefault();
             int tX = -player.x+50;
             int tY = -player.y+50;
             GL.Translate(tX, tY, 0);
             coordPlayer = player.x.ToString() + " " + player.y.ToString();
+
+            foreach (var a in blockList)
+            {
+               drawQuad(texBlocks[a.type], a.x - mainSize, a.y - mainSize, a.x + mainSize, a.y + mainSize);
+            }
 
             foreach (var a in playerslist)
             {
@@ -212,10 +251,12 @@ namespace esufhkehfksdfkjceshk
                 GL.PushMatrix();
                 GL.Translate(a.x, a.y, 0);
                 GL.Rotate(angle, 0, 0, 1);
-                drawQuad(texTank, -4, -4, 4, 4);
+                drawQuad(texTank, -mainSize, -mainSize, mainSize, mainSize);
                 GL.PopMatrix();
             }
+
             GL.Color3(Color.White);
+
             foreach (var a in bulletList)
             {
                 drawQuad(texBullet, a.x - 2, a.y - 2, a.x + 2, a.y + 2);
@@ -256,21 +297,28 @@ namespace esufhkehfksdfkjceshk
             switch (e.KeyCode)
             {
                 case Keys.W:
-                    service.MoveY(textBox2.Text, -5);
+                    service.MoveY(textBox2_nickname.Text, -5);
+                    if(waveOut.PlaybackState==PlaybackState.Paused) waveOut.Play();
                     break;
                 case Keys.S:
-                    service.MoveY(textBox2.Text, 5);
+                    service.MoveY(textBox2_nickname.Text, 5);
+                    if (waveOut.PlaybackState == PlaybackState.Paused) waveOut.Play();
                     break;
                 case Keys.A:
-                    service.MoveX(textBox2.Text, -5);
+                    service.MoveX(textBox2_nickname.Text, -5);
+                    if (waveOut.PlaybackState == PlaybackState.Paused) waveOut.Play();
                     break;
                 case Keys.D:
-                    service.MoveX(textBox2.Text, 5);
+                    service.MoveX(textBox2_nickname.Text, 5);
+                    if (waveOut.PlaybackState == PlaybackState.Paused) waveOut.Play();
                     break;
                 case Keys.Space:
-                    service.CreateBullet(textBox2.Text, 0);
+                    service.CreateBullet(textBox2_nickname.Text, 0);
+                    AudioPlaybackEngine.Instance.PlaySound(SoundFire);
                     break;
-                   
+                case Keys.Q:
+                    service.addBlock(textBox2_nickname.Text, 0);
+                    break;
             }
         }
 
@@ -283,25 +331,26 @@ namespace esufhkehfksdfkjceshk
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             backgroundWorker1.RunWorkerAsync();
-            
         }
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            service.say(textBox2.Text+": "+textBox4forSay.Text);
+            service.say(textBox2_nickname.Text+": "+textBox4forSay.Text);
             textBox4forSay.Text = "";
+            glControl1.Focus();
         }
 
         private void Form1_MouseClick(object sender, MouseEventArgs e)
         {
-            this.Focus();
+            glControl1.Focus();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             try
             {
-                service.say(DateTime.Now.ToShortTimeString() + ") " + textBox2.Text + " disconnected");
+                AudioPlaybackEngine.Instance.Dispose();
+                service.say(DateTime.Now.ToShortTimeString() + ") " + textBox2_nickname.Text + " disconnected");
             }
             catch
             {
@@ -318,14 +367,17 @@ namespace esufhkehfksdfkjceshk
 
             texBullet = new Textures(@"tex/bullet.png");
             texTank = new Textures(@"tex/tank.png");
+            texBlocks.Add(new Textures(@"tex/wall.png"));
 
-            drawQuad(texTank, 100, 100, -100, -100);
-            glControl1.SwapBuffers();
+            waveOut.Init(loop);
+            waveOut.Play();
+            waveOut.Pause();
         }
 
         private void timer2_Tick(object sender, EventArgs e)
         {
             richTextBox1CHAT.Text = sayString;
+            waveOut.Pause();
         }
 
 

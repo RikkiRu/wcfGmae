@@ -11,7 +11,7 @@ namespace CommunicationInterface
     public interface IMyobject
     {
         [OperationContract]
-        object GetCommandString(object i);
+        object GetCommandString(object i, string player);
         [OperationContract]
         void MoveX(string name, int x);
         [OperationContract]
@@ -22,5 +22,7 @@ namespace CommunicationInterface
         int state(string name);
         [OperationContract]
         void say(string say);
+        [OperationContract]
+        void addBlock(string name, int type);
     }
 }
