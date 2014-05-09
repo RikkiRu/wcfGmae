@@ -383,7 +383,7 @@ namespace esufhkehfksdfkjceshk
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            this.WindowState = FormWindowState.Maximized;
+            //this.WindowState = FormWindowState.Maximized;
 
             GL.ClearColor(0.3f, 0.7f, 0.4f, 1.0f);
             GL.Enable(EnableCap.Texture2D);
@@ -400,7 +400,7 @@ namespace esufhkehfksdfkjceshk
             waveOut.Play();
             waveOut.Pause();
 
-            glControl1.SwapBuffers();
+            //glControl1.SwapBuffers();
         }
 
         private void timer2_Tick(object sender, EventArgs e)
@@ -434,8 +434,8 @@ namespace esufhkehfksdfkjceshk
 
         private void Form1_Resize(object sender, EventArgs e)
         {
-            matrix(glControl1.Width, glControl1.Height);
-            glControl1.SwapBuffers();
+            //matrix(glControl1.Width, glControl1.Height);
+            //glControl1.SwapBuffers();
         }
 
 
