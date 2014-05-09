@@ -29,6 +29,8 @@ namespace esufhkehfksdfkjceshk
         void say(string say);
         [OperationContract]
         void addBlock(string name, int type);
+        [OperationContract]
+        string logOrCreate(string name, Color color);
     }
 
    
@@ -40,7 +42,7 @@ namespace esufhkehfksdfkjceshk
             public string name;
             public int x;
             public int y;
-            public int color;
+            public Color color;
             public int direction;
             public int state;
 
@@ -49,7 +51,7 @@ namespace esufhkehfksdfkjceshk
                 name = _name;
                 x = 50;
                 y = 50;
-                color = 0;
+                color = Color.White;
                 state = 1;
             }
         }
@@ -109,6 +111,7 @@ namespace esufhkehfksdfkjceshk
 
         static Textures texBullet;
         static Textures texTank;
+        static Textures texTankBroke;
         static List<Textures> texBlocks=new List<Textures>();
       
 
@@ -139,16 +142,16 @@ namespace esufhkehfksdfkjceshk
                 binding = new BasicHttpBinding();
                 factory = new ChannelFactory<IMyobject>(binding, address);
                 service = factory.CreateChannel();
-                richTextBox1CHAT.Text += service.GetCommandString(textBox2_nickname.Text, "") + Environment.NewLine;
+                richTextBox1CHAT.Text += service.logOrCreate(textBox2_nickname.Text, colorDialog1.Color) + Environment.NewLine;
                 button2.Enabled = false;
+                button3.Enabled = false;
                 textBox2_nickname.Enabled = false;
-                
                 playerslist.Clear();
                 textBox3.Enabled = false;
                 backgroundWorker1.RunWorkerAsync();
                 timer1.Enabled = true;
                 timer2.Enabled = true;
-                service.say(DateTime.Now.ToShortTimeString() + ") " + textBox2_nickname.Text + " connected");
+                service.say(DateTime.Now.ToShortTimeString() + " ) " + textBox2_nickname.Text + " connected");
                 glControl1.Focus();
             }
             catch
@@ -175,6 +178,11 @@ namespace esufhkehfksdfkjceshk
             }
         }
 
+        void setText()
+        {
+            richTextBox1CHAT.Text = sayString;
+        }
+
         public void method()
         {
             try
@@ -198,7 +206,10 @@ namespace esufhkehfksdfkjceshk
                     playerclass p = new playerclass(temp[0]);
                     p.state = Convert.ToInt32(temp[1]);
                     p.direction = Convert.ToInt32(temp[2]);
-                    p.color = Convert.ToInt32(temp[3]);
+
+                    string[] colStr = temp[3].Split('_');
+                    p.color = Color.FromArgb(Convert.ToInt32(colStr[0]), Convert.ToInt32(colStr[1]), Convert.ToInt32(colStr[2]));
+
                     p.x = Convert.ToInt32(temp[4]);
                     p.y = Convert.ToInt32(temp[5]);
                     playerslist.Add(p);
@@ -246,8 +257,7 @@ namespace esufhkehfksdfkjceshk
 
             foreach (var a in playerslist)
             {
-                Color t = Color.White;
-                if (a.state == 0) t = Color.Blue;
+                Color t = a.color;
                 GL.Color3(t);
                 float angle = a.direction * 90.0f;
 
@@ -255,8 +265,9 @@ namespace esufhkehfksdfkjceshk
                 GL.Translate(tX, tY, 0);
                 GL.Translate(a.x, a.y, 0);
                 GL.Rotate(angle, 0, 0, 1);
-                drawQuad(texTank, -mainSize, -mainSize, mainSize, mainSize);
-                   
+
+                if(a.state==1) drawQuad(texTank, -mainSize, -mainSize, mainSize, mainSize);
+                else drawQuad(texTankBroke, -mainSize, -mainSize, mainSize, mainSize);
             }
 
             GL.LoadIdentity();
@@ -348,7 +359,7 @@ namespace esufhkehfksdfkjceshk
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            service.say(textBox2_nickname.Text+": "+textBox4forSay.Text);
+            service.say(" "+textBox2_nickname.Text+" : "+textBox4forSay.Text);
             textBox4forSay.Text = "";
             glControl1.Focus();
         }
@@ -363,7 +374,7 @@ namespace esufhkehfksdfkjceshk
             try
             {
                 AudioPlaybackEngine.Instance.Dispose();
-                service.say(DateTime.Now.ToShortTimeString() + ") " + textBox2_nickname.Text + " disconnected");
+                service.say(DateTime.Now.ToShortTimeString() + " ) " + textBox2_nickname.Text + " disconnected");
             }
             catch
             {
@@ -372,7 +383,7 @@ namespace esufhkehfksdfkjceshk
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            GL.ClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+            GL.ClearColor(0.3f, 0.7f, 0.4f, 1.0f);
             GL.Enable(EnableCap.Texture2D);
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
@@ -380,6 +391,7 @@ namespace esufhkehfksdfkjceshk
 
             texBullet = new Textures(@"tex/bullet.png");
             texTank = new Textures(@"tex/tank.png");
+            texTankBroke = new Textures(@"tex/tankBroke.png");
             texBlocks.Add(new Textures(@"tex/wall.png"));
 
             waveOut.Init(loop);
@@ -389,8 +401,31 @@ namespace esufhkehfksdfkjceshk
 
         private void timer2_Tick(object sender, EventArgs e)
         {
-            richTextBox1CHAT.Text = sayString;
+            setText();
             waveOut.Pause();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            colorDialog1.ShowDialog();
+            button3.BackColor = colorDialog1.Color;
+        }
+
+        private void button4playerList_Click(object sender, EventArgs e)
+        {
+            List<string> names = new List<string>();
+            List<Color> colors = new List<Color>();
+
+            foreach (var a in playerslist)
+            {
+                names.Add(a.name);
+                colors.Add(a.color);
+            }
+
+            FormPlayerList fpl = new FormPlayerList(names, colors);
+            fpl.Show();
+            glControl1.Focus();
+            fpl.Focus();
         }
 
 

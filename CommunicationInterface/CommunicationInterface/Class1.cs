@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 //using System.Threading.Tasks;
 using System.ServiceModel;
+using System.Drawing;
 
 namespace CommunicationInterface
 {
@@ -24,5 +25,7 @@ namespace CommunicationInterface
         void say(string say);
         [OperationContract]
         void addBlock(string name, int type);
+        [OperationContract]
+        string logOrCreate(string name, Color color);
     }
 }

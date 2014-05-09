@@ -6,6 +6,7 @@ using System.Text;
 using System.ServiceModel;
 using CommunicationInterface;
 using System.Timers;
+using System.Drawing;
 
 namespace CommunicationInterface
 {
@@ -45,7 +46,7 @@ namespace CommunicationInterface
                     res += a.name + "\t";
                     res += a.state.ToString() + "\t";
                     res += a.direction.ToString() + "\t";
-                    res += a.color.ToString() + "\t";
+                    res += a.color.R.ToString() + "_" + a.color.G + "_" + a.color.B + "\t";
                     res += a.x.ToString() + "\t";
                     res += a.y.ToString() + "\t";
                     res += "\n";
@@ -91,11 +92,11 @@ namespace CommunicationInterface
             public string name;
             public int x;
             public int y;
-            public int color;
+            public Color color;
             public int direction;
             public int state;
 
-            public playerclass(string _name)
+            public playerclass(string _name, Color color)
             {
                 name = _name;
 
@@ -106,7 +107,7 @@ namespace CommunicationInterface
                     x += 100;
                 }
 
-                color = 0;
+                this.color = color;
                 state = 1;
             }
 
@@ -268,6 +269,19 @@ namespace CommunicationInterface
             }
         }
 
+        public string logOrCreate(string name, Color color)
+        {
+            playerclass find = playerslist.Where(c => c.name == name).FirstOrDefault();
+            if (find == null)
+            {
+                Console.WriteLine("New player! - " + name);
+                playerclass player = new playerclass(name, color);
+                playerslist.Add(player);
+                return "New player (" + name + ") created";
+            }
+            else return "Вы подключились";
+        }
+
         public object GetCommandString(object i, string name)
         {
             if(i is int)
@@ -289,21 +303,8 @@ namespace CommunicationInterface
                     }
                 default:
                     return "Получил " + Convert.ToString(i);
-                    
             }
-            
-            else
-            {
-                playerclass find = playerslist.Where(c => c.name == i.ToString()).FirstOrDefault();
-                if (find == null)
-                {
-                    Console.WriteLine("New player! - "+i.ToString());
-                    playerclass player = new playerclass(i.ToString());
-                    playerslist.Add(player);
-                    return "New player (" + i + ") created";
-                }
-                else return "Вы подключились";
-            }
+            return null;
         }
 
        static public void work( object source, ElapsedEventArgs e )

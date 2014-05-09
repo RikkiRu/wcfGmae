@@ -15,3 +15,4 @@ C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgame2\esufhkehfksdfkjcesh
 C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgame2\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\obj\Debug\esufhkehfksdfkjceshk.Form1.resources
 C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgame2\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\obj\Debug\esufhkehfksdfkjceshk.Properties.Resources.resources
 C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgame2\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\obj\Debug\Clientform.csproj.GenerateResource.Cache
+C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgame2\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\obj\Debug\esufhkehfksdfkjceshk.FormPlayerList.resources
