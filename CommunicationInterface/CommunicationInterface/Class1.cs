@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-//using System.Threading.Tasks;
+﻿//using System.Threading.Tasks;
 using System.ServiceModel;
 using System.Drawing;
 
@@ -14,11 +10,11 @@ namespace CommunicationInterface
         [OperationContract]
         object GetCommandString(object i, string player);
         [OperationContract]
-        void MoveX(string name, int x);
+        void MoveX(string name, double x);
         [OperationContract]
-        void MoveY(string name, int y);
+        void MoveY(string name, double y);
         [OperationContract]
-        void CreateBullet(string name, int spx, int spy);
+        void CreateBullet(string name, double spx, double spy);
         [OperationContract]
         int state(string name);
         [OperationContract]

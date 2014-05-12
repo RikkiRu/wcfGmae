@@ -24,10 +24,10 @@ namespace CommunicationInterface
 
         public const int countOfMessages = 100;
 
-        public static bool IsInDistance (int x, int y, int ax, int ay, int distX, int distY)
+        public static bool IsInDistance (double x, double y, double ax, double ay, double distX, double distY)
         {
-            int dx;
-            int dy;
+            double dx;
+            double dy;
 
             if (ax > x) dx = ax - x;
             else dx = x - ax;
@@ -38,7 +38,7 @@ namespace CommunicationInterface
             return false;
         }
 
-        public static string retPlayerList(int x, int y)
+        public static string retPlayerList(double x, double y)
         {
             string res = "";
             foreach(var a in playerslist)
@@ -53,13 +53,14 @@ namespace CommunicationInterface
                     res += a.y.ToString() + "\t";
                     res += a.sizeX.ToString() + "\t";
                     res += a.sizeY.ToString() + "\t";
+                    res += a.headDir.ToString() + "\t";
                     res += "\n";
                }
             }
             return res;
         }
 
-        public static string retBullet(int x, int y)
+        public static string retBullet(double x, double y)
         {
             string res = "";
             foreach (var a in bulletlist)
@@ -74,7 +75,7 @@ namespace CommunicationInterface
             return res;
         }
 
-        public static string retBlock(int x, int y)
+        public static string retBlock(double x, double y)
         {
             string res = "";
             foreach (var a in blockList)
@@ -96,13 +97,14 @@ namespace CommunicationInterface
         public class playerclass
         {
             public string name;
-            public int x;
-            public int y;
-            public int sizeX;
-            public int sizeY;
+            public double x;
+            public double y;
+            public double sizeX;
+            public double sizeY;
             public Color color;
             public int direction;
             public int state;
+            public int headDir;
 
             public playerclass(string _name, Color color)
             {
@@ -123,21 +125,21 @@ namespace CommunicationInterface
                 state = 1;
             }
 
-            public bool tryMove(int x, int y)
+            public bool tryMove(double x, double y)
             {
-                int dx = this.x + x;
-                int dy = this.y + y;
+                double dx = this.x + x;
+                double dy = this.y + y;
 
                 foreach (var a in playerslist)
                 {
                     if (a == this || a.state==0) continue;
 
-                    if(IsInDistance(dx, dy, a.x, a.y, a.sizeX, a.sizeY)) return false;
+                    if (IsInDistance(dx, dy, a.x, a.y, a.sizeX + this.sizeX / 2, a.sizeY + this.sizeY / 2)) return false;
                 }
 
                 foreach (var a in blockList)
                 {
-                    if (a.isBlocakble && IsInDistance(dx, dy, a.x, a.y, a.sizeX, a.sizeY)) return false;
+                    if (a.isBlocakble && IsInDistance(dx, dy, a.x, a.y, a.sizeX + this.sizeX / 2, a.sizeY + this.sizeY / 2)) return false;
                 }
 
                 this.x = dx;
@@ -148,15 +150,15 @@ namespace CommunicationInterface
 
         public class bullet
         {
-            public int x;
-            public int y;
-            int speedX;
-            int speedY;
+            public double x;
+            public double y;
+            double speedX;
+            double speedY;
             const int distToExpl = 5;
             public int lifetime = 30;
             public bool forDelele = false;
 
-            public bullet(int x, int y, int speedX, int speedY)
+            public bullet(double x, double y, double speedX, double speedY)
             {
                 this.speedX = speedX;
                 this.speedY = speedY;
@@ -169,13 +171,16 @@ namespace CommunicationInterface
                 lifetime--;
                 if (lifetime < 0) forDelele = true;
                 x += speedX;
+                Console.WriteLine("x+" + speedX.ToString());
                 y += speedY;
             }
 
-            public bool explosion(int px, int py, int sizeX, int sizeY)
+            public bool explosion(double px, double py, double sizeX, double sizeY)
             {
-                int dx = 0;
-                int dy = 0;
+                return false;
+
+                double dx = 0;
+                double dy = 0;
                 if (px > this.x) dx = px - this.x;
                 else dx = this.x - px;
                 if (py > this.y) dy = py - this.y;
@@ -189,8 +194,8 @@ namespace CommunicationInterface
 
         public class block
         {
-            public int x;
-            public int y;
+            public double x;
+            public double y;
             public int sizeX;
             public int sizeY;
             public string type;
@@ -199,7 +204,7 @@ namespace CommunicationInterface
             public int dir;
             public bool isBlocakble;
 
-            public block(int x, int y, string type, int dir, bool isBlockable, int lifes, int SizeX, int SizeY)
+            public block(double x, double y, string type, int dir, bool isBlockable, int lifes, int SizeX, int SizeY)
             {
                 this.x = x;
                 this.y = y;
@@ -224,15 +229,15 @@ namespace CommunicationInterface
             return find.state;
         }
 
-        public void CreateBullet(string name, int spx, int spy)
+        public void CreateBullet(string name, double spx, double spy)
         {
             playerclass find = playerslist.Where(c => c.name == name).FirstOrDefault();
             if (find == null) return;
             if (find.state == 0) return;
 
-            int mx = 0;
-            int my = 0;
-            int dist = boxTank;
+            double mx = 0;
+            double my = 0;
+            double dist = boxTank;
 
             switch (find.direction)
             {
@@ -245,7 +250,7 @@ namespace CommunicationInterface
             bulletlist.Add(new bullet(find.x+mx, find.y+my, spx, spy));
         }
 
-        public void MoveX(string name, int x)
+        public void MoveX(string name, double x)
         {
             playerclass find = playerslist.Where(c => c.name == name).FirstOrDefault();
             if (find.state != 0)
@@ -278,7 +283,7 @@ namespace CommunicationInterface
             sayCount++;
         }
 
-        public void MoveY(string name, int y)
+        public void MoveY(string name, double y)
         {
             playerclass find = playerslist.Where(c => c.name == name).FirstOrDefault();
             if (find.state != 0)
@@ -335,43 +340,50 @@ namespace CommunicationInterface
 
        static public void work( object source, ElapsedEventArgs e )
         {
-           foreach(var a in bulletlist)
-           {
-               a.move();
-               foreach (var b in playerslist)
-               {
-                   if(b.state!=0 && a.explosion(b.x, b.y, b.sizeX, b.sizeY))
-                   {
-                       b.state = 0;
-                       a.forDelele = true;
-                   }
-               }
+            try
+            {
+                foreach (var a in bulletlist)
+                {
+                    a.move();
+                    foreach (var b in playerslist)
+                    {
+                        if (b.state != 0 && a.explosion(b.x, b.y, b.sizeX, b.sizeY))
+                        {
+                            b.state = 0;
+                            a.forDelele = true;
+                        }
+                    }
 
-               foreach (var b in blockList)
-               {
-                   if (a.explosion(b.x, b.y, b.sizeX, b.sizeY))
-                   {
-                       b.hit();
-                       a.forDelele = true;
-                   }
-               }
-           }
 
-           for (int i = bulletlist.Count - 1; i >= 0; i--)
-           {
-               if (bulletlist[i].forDelele)
-               {
-                   bulletlist.Remove(bulletlist[i]);
-               }
-           }
+                    foreach (var b in blockList)
+                    {
+                        if (a.explosion(b.x, b.y, b.sizeX, b.sizeY))
+                        {
+                            b.hit();
+                            a.forDelele = true;
+                        }
+                    }
+                }
 
-           for (int i = blockList.Count - 1; i >= 0; i--)
-           {
-               if (blockList[i].forDelete)
-               {
-                   blockList.Remove(blockList[i]);
-               }
-           }
+                for (int i = bulletlist.Count - 1; i >= 0; i--)
+                {
+                    if (bulletlist[i].forDelele)
+                    {
+                        bulletlist.Remove(bulletlist[i]);
+                    }
+                }
+
+                for (int i = blockList.Count - 1; i >= 0; i--)
+                {
+                    if (blockList[i].forDelete)
+                    {
+                        blockList.Remove(blockList[i]);
+                    }
+                }
+            }
+            catch
+            {
+            }
         }
 
        public void addBlock(string name, int type)
@@ -380,9 +392,9 @@ namespace CommunicationInterface
            if (find == null) return;
            if (find.state == 0) return;
 
-           int mx = 0;
-           int my = 0;
-           int dist = boxTank + boxBlock;
+           double mx = 0;
+           double my = 0;
+           double dist = boxTank + boxBlock;
 
            switch (find.direction)
            {

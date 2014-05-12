@@ -18,11 +18,11 @@ namespace esufhkehfksdfkjceshk
         [OperationContract]
         object GetCommandString(object i, string player);
         [OperationContract]
-        void MoveX(string name, int x);
+        void MoveX(string name, double x);
         [OperationContract]
-        void MoveY(string name, int y);
+        void MoveY(string name, double y);
         [OperationContract]
-        void CreateBullet(string name, int spx, int spy);
+        void CreateBullet(string name, double spx, double spy);
         [OperationContract]
         int state(string name);
         [OperationContract]
@@ -55,19 +55,16 @@ namespace esufhkehfksdfkjceshk
         static IMyobject service;
 
         string sayString="";
-        string coordPlayer = "";
-        static int mainSize = 8;
-      
-
-        public float ortoX;
-        public float ortoY;
+        string formText = "";
 
         public static float kamera=1;
 
         LoopStream loop = new LoopStream(new WaveFileReader(@"sound/move.wav"));
         WaveOut waveOut = new WaveOut();
         static CachedSound SoundFire = new CachedSound(@"sound/fire.wav");
-       
+
+        static Point mousePos = new Point();
+
         //------------------------------------------------------------------
 
 
@@ -139,15 +136,18 @@ namespace esufhkehfksdfkjceshk
                 {
                     if (allPla[i] == "" || allPla[i]==" ") continue;
                     string[] temp = allPla[i].Split('\t');
-                    Render.playerclass p = new Render.playerclass(temp[0], Convert.ToInt32(temp[6]), Convert.ToInt32(temp[7]));
+                    Render.playerclass p = new Render.playerclass(temp[0], Convert.ToDouble(temp[6]), Convert.ToDouble(temp[7]));
                     p.state = Convert.ToInt32(temp[1]);
                     p.direction = Convert.ToInt32(temp[2]);
+                    p.headDir = Convert.ToInt32(temp[8]);
 
                     string[] colStr = temp[3].Split('_');
                     p.color = Color.FromArgb(Convert.ToInt32(colStr[0]), Convert.ToInt32(colStr[1]), Convert.ToInt32(colStr[2]));
 
-                    p.x = Convert.ToInt32(temp[4]);
-                    p.y = Convert.ToInt32(temp[5]);
+                    p.x = Convert.ToDouble(temp[4]);
+                    p.y = Convert.ToDouble(temp[5]);
+
+                    if (p.name == Render.name) p.headDir = calculateAngle();
                     Render.playerslist.Add(p);
                 }
 
@@ -156,7 +156,7 @@ namespace esufhkehfksdfkjceshk
                     if (allBull[i] == "" || allBull[i] == " ") continue;
 
                     string[] temp = allBull[i].Split('\t');
-                    Render.bullet b = new Render.bullet(Convert.ToInt32(temp[0]), Convert.ToInt32(temp[1]));
+                    Render.bullet b = new Render.bullet(Convert.ToDouble(temp[0]), Convert.ToDouble(temp[1]));
                     Render.bulletList.Add(b);
                 }
 
@@ -164,7 +164,7 @@ namespace esufhkehfksdfkjceshk
                 {
                     if (allBlock[i] == "" || allBlock[i] == " ") continue;
                     string[] temp = allBlock[i].Split('\t');
-                    Render.block b = new Render.block(Convert.ToInt32(temp[0]), Convert.ToInt32(temp[1]), temp[2], Convert.ToInt32(temp[3]), Convert.ToInt32(temp[4]), Convert.ToInt32(temp[5]));
+                    Render.block b = new Render.block(Convert.ToDouble(temp[0]), Convert.ToDouble(temp[1]), temp[2], Convert.ToInt32(temp[3]), Convert.ToDouble(temp[4]), Convert.ToDouble(temp[5]));
                     Render.blockList.Add(b);
                 }
                 
@@ -205,7 +205,8 @@ namespace esufhkehfksdfkjceshk
                         if (waveOut.PlaybackState == PlaybackState.Paused) waveOut.Play();
                         break;
                     case Keys.Space:
-                        service.CreateBullet(textBox2_nickname.Text, 2,1);
+                        dPoint t = calculateSpeed(player.headDir);
+                        service.CreateBullet(textBox2_nickname.Text, t.x,t.y);
                         AudioPlaybackEngine.Instance.PlaySound(SoundFire);
                         break;
                     case Keys.Q:
@@ -231,7 +232,7 @@ namespace esufhkehfksdfkjceshk
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            this.Text = coordPlayer;
+            this.Text = formText;
 
             try
             {
@@ -282,7 +283,8 @@ namespace esufhkehfksdfkjceshk
             Render.texBullet = new Render.Textures(@"tex/bullet.png");
             Render.texTank = new Render.Textures(@"tex/tank.png");
             Render.texTankBroke = new Render.Textures(@"tex/tankBroke.png");
-            Render.texBlocks.Add(new Render.Textures(@"tex/wall.png"));
+            Render.texBlocks.Add("brick", new Render.Textures(@"tex/wall.png"));
+            Render.texTankHead = new Render.Textures(@"tex/tankHead.png");
 
             waveOut.Init(loop);
             waveOut.Play();
@@ -292,12 +294,9 @@ namespace esufhkehfksdfkjceshk
         }
 
         private void timer2_Tick(object sender, EventArgs e)
-        {
-            
-            
+        { 
             setText();
-            waveOut.Pause();
-            
+            waveOut.Pause();     
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -336,6 +335,41 @@ namespace esufhkehfksdfkjceshk
         {
         }
 
+        int calculateAngle()
+        {
+            //return Math.Atan2(
+            double w = glControl1.Size.Width / 2 - mousePos.X;
+            double h = glControl1.Size.Height / 2 - mousePos.Y;
+            //if (w < 0) w = -w;
+            //if (h < 0) h = -h;
+            double res = Math.Atan2(w, h) * 57;
+            //formText = res.ToString();
+            return -(int)res;
+        }
 
+        dPoint calculateSpeed(int angle)
+        {
+            double nAnge = angle/57.0;
+            dPoint res = new dPoint();
+            double resX = (Math.Sin(nAnge));
+            double resY = (Math.Cos(nAnge));
+            formText = angle.ToString()+"    x "+resX.ToString() + "   y " + resY.ToString();
+            res.x = (resX);
+            res.y = -(resY);
+            return res;
+        }
+
+        private void glControl1_MouseMove(object sender, MouseEventArgs e)
+        {
+            mousePos.X = e.X;
+            mousePos.Y = e.Y;
+        }
+
+    }
+
+    class dPoint
+    {
+        public double x;
+        public double y;
     }
 }

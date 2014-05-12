@@ -42,19 +42,20 @@
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.button3 = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.button2.Location = new System.Drawing.Point(2, 75);
+            this.button2.Location = new System.Drawing.Point(3, 92);
+            this.button2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(152, 41);
+            this.button2.Size = new System.Drawing.Size(203, 50);
             this.button2.TabIndex = 1;
             this.button2.Text = "В бой!";
             this.button2.UseVisualStyleBackColor = true;
@@ -65,9 +66,10 @@
             // 
             this.textBox2_nickname.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.textBox2_nickname.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBox2_nickname.Location = new System.Drawing.Point(2, 16);
+            this.textBox2_nickname.Location = new System.Drawing.Point(3, 20);
+            this.textBox2_nickname.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBox2_nickname.Name = "textBox2_nickname";
-            this.textBox2_nickname.Size = new System.Drawing.Size(152, 22);
+            this.textBox2_nickname.Size = new System.Drawing.Size(201, 26);
             this.textBox2_nickname.TabIndex = 3;
             this.textBox2_nickname.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             // 
@@ -80,18 +82,20 @@
             // textBox3
             // 
             this.textBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.textBox3.Location = new System.Drawing.Point(2, 155);
+            this.textBox3.Location = new System.Drawing.Point(3, 191);
+            this.textBox3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(152, 20);
+            this.textBox3.Size = new System.Drawing.Size(201, 22);
             this.textBox3.TabIndex = 5;
             // 
             // label1
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 139);
+            this.label1.Location = new System.Drawing.Point(4, 171);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(17, 13);
+            this.label1.Size = new System.Drawing.Size(20, 17);
             this.label1.TabIndex = 6;
             this.label1.Text = "IP";
             // 
@@ -99,12 +103,12 @@
             // 
             this.richTextBox1CHAT.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.richTextBox1CHAT.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.richTextBox1CHAT.Location = new System.Drawing.Point(2, 2);
-            this.richTextBox1CHAT.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.richTextBox1CHAT.Location = new System.Drawing.Point(3, 2);
+            this.richTextBox1CHAT.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.richTextBox1CHAT.Name = "richTextBox1CHAT";
             this.richTextBox1CHAT.ReadOnly = true;
             this.richTextBox1CHAT.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.richTextBox1CHAT.Size = new System.Drawing.Size(196, 239);
+            this.richTextBox1CHAT.Size = new System.Drawing.Size(261, 294);
             this.richTextBox1CHAT.TabIndex = 7;
             this.richTextBox1CHAT.Text = "";
             this.richTextBox1CHAT.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
@@ -114,9 +118,8 @@
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(-1, 0);
-            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(35, 13);
+            this.label2.Size = new System.Drawing.Size(45, 17);
             this.label2.TabIndex = 8;
             this.label2.Text = "Name";
             // 
@@ -125,10 +128,10 @@
             this.textBox4forSay.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.textBox4forSay.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox4forSay.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBox4forSay.Location = new System.Drawing.Point(2, 241);
-            this.textBox4forSay.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBox4forSay.Location = new System.Drawing.Point(3, 297);
+            this.textBox4forSay.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.textBox4forSay.Name = "textBox4forSay";
-            this.textBox4forSay.Size = new System.Drawing.Size(196, 22);
+            this.textBox4forSay.Size = new System.Drawing.Size(261, 27);
             this.textBox4forSay.TabIndex = 9;
             this.textBox4forSay.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox4forSay_KeyDown);
             // 
@@ -137,11 +140,13 @@
             this.glControl1.BackColor = System.Drawing.Color.Black;
             this.glControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.glControl1.Location = new System.Drawing.Point(0, 0);
+            this.glControl1.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
             this.glControl1.Name = "glControl1";
-            this.glControl1.Size = new System.Drawing.Size(698, 461);
+            this.glControl1.Size = new System.Drawing.Size(931, 567);
             this.glControl1.TabIndex = 12;
             this.glControl1.VSync = false;
             this.glControl1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
+            this.glControl1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.glControl1_MouseMove);
             // 
             // timer2
             // 
@@ -156,10 +161,10 @@
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.button3.BackColor = System.Drawing.Color.White;
-            this.button3.Location = new System.Drawing.Point(2, 43);
-            this.button3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button3.Location = new System.Drawing.Point(3, 53);
+            this.button3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(152, 27);
+            this.button3.Size = new System.Drawing.Size(203, 33);
             this.button3.TabIndex = 13;
             this.button3.Text = "Цвет";
             this.button3.UseVisualStyleBackColor = false;
@@ -175,14 +180,25 @@
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(698, 461);
+            this.panel1.Size = new System.Drawing.Size(931, 567);
             this.panel1.TabIndex = 15;
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.richTextBox1CHAT);
+            this.panel3.Controls.Add(this.textBox4forSay);
+            this.panel3.Location = new System.Drawing.Point(16, 20);
+            this.panel3.Margin = new System.Windows.Forms.Padding(0);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(267, 326);
+            this.panel3.TabIndex = 17;
+            this.panel3.Visible = false;
             // 
             // panel2
             // 
-            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.panel2.BackColor = System.Drawing.Color.OliveDrab;
             this.panel2.Controls.Add(this.button2);
             this.panel2.Controls.Add(this.button3);
@@ -190,31 +206,21 @@
             this.panel2.Controls.Add(this.label2);
             this.panel2.Controls.Add(this.textBox3);
             this.panel2.Controls.Add(this.label1);
-            this.panel2.Location = new System.Drawing.Point(296, 106);
-            this.panel2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.panel2.MaximumSize = new System.Drawing.Size(156, 181);
+            this.panel2.Location = new System.Drawing.Point(395, 130);
+            this.panel2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.panel2.MaximumSize = new System.Drawing.Size(208, 223);
             this.panel2.Name = "panel2";
             this.panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.panel2.Size = new System.Drawing.Size(156, 181);
+            this.panel2.Size = new System.Drawing.Size(208, 223);
             this.panel2.TabIndex = 16;
-            // 
-            // panel3
-            // 
-            this.panel3.Controls.Add(this.richTextBox1CHAT);
-            this.panel3.Controls.Add(this.textBox4forSay);
-            this.panel3.Location = new System.Drawing.Point(12, 16);
-            this.panel3.Margin = new System.Windows.Forms.Padding(0);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(200, 265);
-            this.panel3.TabIndex = 17;
-            this.panel3.Visible = false;
             // 
             // FormMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(698, 461);
+            this.ClientSize = new System.Drawing.Size(931, 567);
             this.Controls.Add(this.panel1);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "FormMain";
             this.Text = "Tanks by Igor and Andrew";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
@@ -225,10 +231,10 @@
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseClick);
             this.Resize += new System.EventHandler(this.Form1_Resize);
             this.panel1.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.ResumeLayout(false);
 
         }

@@ -84,22 +84,24 @@ namespace render
         public static Textures texBullet;
         public static Textures texTank;
         public static Textures texTankBroke;
-        public static List<Textures> texBlocks = new List<Textures>();
+        public static Textures texTankHead;
+        public static Dictionary<string, Textures> texBlocks = new Dictionary<string, Textures>();
         public static float ortoX;
         public static float ortoY;
 
         public class playerclass
         {
             public string name;
-            public int x;
-            public int y;
+            public double x;
+            public double y;
             public Color color;
             public int direction;
             public int state;
-            public int sizeX;
-            public int sizeY;
+            public double sizeX;
+            public double sizeY;
+            public int headDir;
 
-            public playerclass(string _name, int sizex, int sizey)
+            public playerclass(string _name, double sizex, double sizey)
             {
                 name = _name;
                 x = 50;
@@ -113,11 +115,11 @@ namespace render
 
         public class bullet
         {
-            public int x;
-            public int y;
+            public double x;
+            public double y;
 
 
-            public bullet(int x, int y)
+            public bullet(double x, double y)
             {
                 this.x = x;
                 this.y = y;
@@ -126,16 +128,16 @@ namespace render
 
         public class block
         {
-            public int x;
-            public int y;
-            public int sizeX;
-            public int sizeY;
+            public double x;
+            public double y;
+            public double sizeX;
+            public double sizeY;
             public string type;
             public int lifes = 5;
             public int dir;
             public bool forDelete = false;
 
-            public block(int x, int y, string type, int dir, int sizeX, int sizeY)
+            public block(double x, double y, string type, int dir, double sizeX, double sizeY)
             {
                 this.x = x;
                 this.y = y;
@@ -150,52 +152,52 @@ namespace render
         {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.LoadIdentity();
+
             var player = playerslist.Where(c => c.name == name).FirstOrDefault();
-            int tX = -player.x + (int)ortoX / 2;
-            int tY = -player.y + (int)ortoY / 2;
+            double tX = -player.x + ortoX / 2;
+            double tY = -player.y + ortoY / 2;
             GL.Translate(tX, tY, 0);
-            //GL.Scale(kamera, kamera, 1);
             coordPlayer = player.x.ToString() + " " + player.y.ToString();
 
             foreach (var a in blockList)
             {
-                switch (a.type)
-                {
-                    case "brick": drawQuad(texBlocks[0], a.x - a.sizeX, a.y - a.sizeY, a.x + a.sizeX, a.y + a.sizeY); break;
-
-                }
-
+                GL.PushMatrix();
+                GL.Translate(a.x, a.y, 0);
+                GL.Rotate(a.dir, 0, 0, 1);
+                drawQuad(texBlocks[a.type], - a.sizeX, - a.sizeY, a.sizeX, a.sizeY); 
+                GL.PopMatrix(); 
             }
 
             foreach (var a in playerslist)
             {
+                GL.PushMatrix();
                 Color t = a.color;
                 GL.Color3(t);
                 float angle = a.direction * 90.0f;
-
-                GL.LoadIdentity();
-                GL.Translate(tX, tY, 0);
                 GL.Translate(a.x, a.y, 0);
-                //GL.Scale(kamera, kamera, 1);
                 GL.Rotate(angle, 0, 0, 1);
-
                 if (a.state == 1) drawQuad(texTank, -a.sizeX, -a.sizeY, a.sizeX, a.sizeY);
                 else drawQuad(texTankBroke, -a.sizeX, -a.sizeY, a.sizeX, a.sizeY);
+                GL.PopMatrix();
+
+                if (a.state == 1)
+                {
+                    GL.PushMatrix();
+                    GL.Translate(a.x, a.y, 0);
+                    GL.Rotate(a.headDir, 0, 0, 1);
+                    drawQuad(texTankHead, -a.sizeX*1.5, -a.sizeY*1.5f, a.sizeX*1.5f, a.sizeY*1.5f);
+                    GL.PopMatrix();
+                }
             }
 
-            GL.LoadIdentity();
-
-            GL.Translate(tX, tY, 0);
-            //GL.Scale(kamera, kamera, 1);
             GL.Color3(Color.White);
-
             foreach (var a in bulletList)
             {
                 drawQuad(texBullet, a.x - 2, a.y - 2, a.x + 2, a.y + 2);
             }
         }
 
-        static public void drawQuad(Textures t, float p1x, float p1y, float p2x, float p2y)
+        static public void drawQuad(Textures t, double p1x, double p1y, double p2x, double p2y)
         {
             t.bind();
             GL.Begin(BeginMode.Quads);
