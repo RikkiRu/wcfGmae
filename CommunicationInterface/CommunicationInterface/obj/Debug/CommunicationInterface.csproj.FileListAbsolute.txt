@@ -18,3 +18,8 @@ C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgame2\CommunicationInterf
 C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgame2\CommunicationInterface\CommunicationInterface\obj\Debug\CommunicationInterface.csprojResolveAssemblyReference.cache
 C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgame2\CommunicationInterface\CommunicationInterface\obj\Debug\CommunicationInterface.dll
 C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgame2\CommunicationInterface\CommunicationInterface\obj\Debug\CommunicationInterface.pdb
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\wcfGmae-master\CommunicationInterface\CommunicationInterface\bin\Debug\CommunicationInterface.dll
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\wcfGmae-master\CommunicationInterface\CommunicationInterface\bin\Debug\CommunicationInterface.pdb
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\wcfGmae-master\CommunicationInterface\CommunicationInterface\obj\Debug\CommunicationInterface.csprojResolveAssemblyReference.cache
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\wcfGmae-master\CommunicationInterface\CommunicationInterface\obj\Debug\CommunicationInterface.dll
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\wcfGmae-master\CommunicationInterface\CommunicationInterface\obj\Debug\CommunicationInterface.pdb

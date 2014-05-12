@@ -30,3 +30,11 @@ C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgame2\server\server\bin\D
 C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgame2\server\server\bin\Debug\server.pdb
 C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgame2\server\server\bin\Debug\CommunicationInterface.dll
 C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgame2\server\server\bin\Debug\CommunicationInterface.pdb
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\wcfGmae-master\server\server\bin\Debug\server.exe.config
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\wcfGmae-master\server\server\obj\Debug\server.exe
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\wcfGmae-master\server\server\obj\Debug\server.pdb
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\wcfGmae-master\server\server\obj\Debug\server.csprojResolveAssemblyReference.cache
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\wcfGmae-master\server\server\bin\Debug\server.exe
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\wcfGmae-master\server\server\bin\Debug\server.pdb
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\wcfGmae-master\server\server\bin\Debug\CommunicationInterface.dll
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\wcfGmae-master\server\server\bin\Debug\CommunicationInterface.pdb

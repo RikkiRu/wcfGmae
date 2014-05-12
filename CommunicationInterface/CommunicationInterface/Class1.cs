@@ -18,7 +18,7 @@ namespace CommunicationInterface
         [OperationContract]
         void MoveY(string name, int y);
         [OperationContract]
-        void CreateBullet(string name, int dir);
+        void CreateBullet(string name, int spx, int spy);
         [OperationContract]
         int state(string name);
         [OperationContract]

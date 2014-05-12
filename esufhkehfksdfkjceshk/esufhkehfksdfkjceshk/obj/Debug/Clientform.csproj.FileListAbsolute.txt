@@ -16,3 +16,23 @@ C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgame2\esufhkehfksdfkjcesh
 C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgame2\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\obj\Debug\Clientform.csproj.GenerateResource.Cache
 C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgame2\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\obj\Debug\esufhkehfksdfkjceshk.FormPlayerList.resources
 C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgame2\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\obj\Debug\esufhkehfksdfkjceshk.FormMain.resources
+C:\Users\Игорь\Downloads\wcfGmae-master\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\obj\Debug\esufhkehfksdfkjceshk.exe
+C:\Users\Игорь\Downloads\wcfGmae-master\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\obj\Debug\esufhkehfksdfkjceshk.pdb
+C:\Users\Игорь\Downloads\wcfGmae-master\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\bin\Debug\esufhkehfksdfkjceshk.exe
+C:\Users\Игорь\Downloads\wcfGmae-master\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\bin\Debug\esufhkehfksdfkjceshk.pdb
+C:\Users\Игорь\Downloads\wcfGmae-master\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\obj\Debug\Clientform.csprojResolveAssemblyReference.cache
+C:\Users\Игорь\Downloads\wcfGmae-master\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\obj\Debug\esufhkehfksdfkjceshk.FormMain.resources
+C:\Users\Игорь\Downloads\wcfGmae-master\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\obj\Debug\esufhkehfksdfkjceshk.FormPlayerList.resources
+C:\Users\Игорь\Downloads\wcfGmae-master\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\obj\Debug\esufhkehfksdfkjceshk.Properties.Resources.resources
+C:\Users\Игорь\Downloads\wcfGmae-master\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\obj\Debug\Clientform.csproj.GenerateResource.Cache
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\wcfGmae-master\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\obj\Debug\esufhkehfksdfkjceshk.exe
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\wcfGmae-master\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\obj\Debug\esufhkehfksdfkjceshk.pdb
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\wcfGmae-master\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\bin\Debug\esufhkehfksdfkjceshk.exe
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\wcfGmae-master\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\bin\Debug\esufhkehfksdfkjceshk.pdb
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\wcfGmae-master\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\bin\Debug\render.dll
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\wcfGmae-master\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\bin\Debug\render.pdb
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\wcfGmae-master\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\obj\Debug\Clientform.csprojResolveAssemblyReference.cache
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\wcfGmae-master\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\obj\Debug\esufhkehfksdfkjceshk.FormMain.resources
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\wcfGmae-master\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\obj\Debug\esufhkehfksdfkjceshk.FormPlayerList.resources
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\wcfGmae-master\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\obj\Debug\esufhkehfksdfkjceshk.Properties.Resources.resources
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\wcfGmae-master\esufhkehfksdfkjceshk\esufhkehfksdfkjceshk\obj\Debug\Clientform.csproj.GenerateResource.Cache

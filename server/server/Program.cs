@@ -11,7 +11,7 @@ using System.Drawing;
 namespace CommunicationInterface
 {
     public class MyObject : IMyobject
-    {
+    {//
         public static List<playerclass> playerslist = new List<playerclass>();
         public static List<bullet> bulletlist = new List<bullet>();
         public static List<block> blockList = new List<block>();
@@ -22,7 +22,9 @@ namespace CommunicationInterface
         public static int boxTank = 10;
         public static int boxBlock = 10;
 
-        public static bool IsInDistance (int x, int y, int ax, int ay, int distance)
+        public const int countOfMessages = 100;
+
+        public static bool IsInDistance (int x, int y, int ax, int ay, int distX, int distY)
         {
             int dx;
             int dy;
@@ -32,7 +34,7 @@ namespace CommunicationInterface
             if (ay > y) dy = ay - y;
             else dy = y - ay;
 
-            if (dx < distance && dy < distance) return true;
+            if (dx < distX && dy < distY) return true;
             return false;
         }
 
@@ -41,7 +43,7 @@ namespace CommunicationInterface
             string res = "";
             foreach(var a in playerslist)
             {
-               if (IsInDistance(x, y, a.x, a.y, visibleDistance))
+               if (IsInDistance(x, y, a.x, a.y, visibleDistance, visibleDistance))
                {
                     res += a.name + "\t";
                     res += a.state.ToString() + "\t";
@@ -49,6 +51,8 @@ namespace CommunicationInterface
                     res += a.color.R.ToString() + "_" + a.color.G + "_" + a.color.B + "\t";
                     res += a.x.ToString() + "\t";
                     res += a.y.ToString() + "\t";
+                    res += a.sizeX.ToString() + "\t";
+                    res += a.sizeY.ToString() + "\t";
                     res += "\n";
                }
             }
@@ -60,11 +64,10 @@ namespace CommunicationInterface
             string res = "";
             foreach (var a in bulletlist)
             {
-                if (IsInDistance(x, y, a.x, a.y, visibleDistance))
+                if (IsInDistance(x, y, a.x, a.y, visibleDistance, visibleDistance))
                 {
                     res += a.x.ToString() + "\t";
                     res += a.y.ToString() + "\t";
-                    res += a.dir.ToString() + "\t";
                     res += "\n";
                 }
             }
@@ -76,11 +79,14 @@ namespace CommunicationInterface
             string res = "";
             foreach (var a in blockList)
             {
-                if (IsInDistance(x, y, a.x, a.y, visibleDistance))
+                if (IsInDistance(x, y, a.x, a.y, visibleDistance, visibleDistance))
                 {
                     res += a.x.ToString() + "\t";
                     res += a.y.ToString() + "\t";
                     res += a.type.ToString() + "\t";
+                    res += a.dir.ToString() + "\t";
+                    res += a.sizeX.ToString() + "\t";
+                    res += a.sizeY.ToString() + "\t";
                     res += "\n";
                 }
             }
@@ -92,6 +98,8 @@ namespace CommunicationInterface
             public string name;
             public int x;
             public int y;
+            public int sizeX;
+            public int sizeY;
             public Color color;
             public int direction;
             public int state;
@@ -107,6 +115,10 @@ namespace CommunicationInterface
                     x += 100;
                 }
 
+                sizeX = 10;
+                sizeY = 10;
+                if (name == "god") sizeX = sizeY = 50;
+
                 this.color = color;
                 state = 1;
             }
@@ -118,14 +130,14 @@ namespace CommunicationInterface
 
                 foreach (var a in playerslist)
                 {
-                    if (a == this) continue;
+                    if (a == this || a.state==0) continue;
 
-                    if(IsInDistance(dx, dy, a.x, a.y, boxTank)) return false;
+                    if(IsInDistance(dx, dy, a.x, a.y, a.sizeX, a.sizeY)) return false;
                 }
 
                 foreach (var a in blockList)
                 {
-                    if (IsInDistance(dx, dy, a.x, a.y, boxBlock)) return false;
+                    if (a.isBlocakble && IsInDistance(dx, dy, a.x, a.y, a.sizeX, a.sizeY)) return false;
                 }
 
                 this.x = dx;
@@ -138,33 +150,29 @@ namespace CommunicationInterface
         {
             public int x;
             public int y;
-            public int dir;
-            const int speed = 5;
+            int speedX;
+            int speedY;
             const int distToExpl = 5;
             public int lifetime = 30;
             public bool forDelele = false;
 
-            public bullet(int x, int y, int dir)
+            public bullet(int x, int y, int speedX, int speedY)
             {
+                this.speedX = speedX;
+                this.speedY = speedY;
                 this.x = x;
                 this.y = y;
-                this.dir = dir;
             }
 
             public void move()
             {
                 lifetime--;
                 if (lifetime < 0) forDelele = true;
-                switch (dir)
-                {
-                    case 0: y -= speed; break;
-                    case 1: x += speed; break;
-                    case 2: y += speed; break;
-                    case 3: x -= speed; break;
-                }
+                x += speedX;
+                y += speedY;
             }
 
-            public bool explosion(int px, int py, int size)
+            public bool explosion(int px, int py, int sizeX, int sizeY)
             {
                 int dx = 0;
                 int dy = 0;
@@ -173,7 +181,7 @@ namespace CommunicationInterface
                 if (py > this.y) dy = py - this.y;
                 else dy = this.y - py;
 
-                if (dx < size && dy < size) return true;
+                if (dx < sizeX && dy < sizeY) return true;
 
                 return false;
             }
@@ -183,15 +191,24 @@ namespace CommunicationInterface
         {
             public int x;
             public int y;
-            public int type;
-            public int lifes=5;
+            public int sizeX;
+            public int sizeY;
+            public string type;
+            public int lifes;
             public bool forDelete=false;
+            public int dir;
+            public bool isBlocakble;
 
-            public block(int x, int y, int type)
+            public block(int x, int y, string type, int dir, bool isBlockable, int lifes, int SizeX, int SizeY)
             {
                 this.x = x;
                 this.y = y;
                 this.type = type;
+                this.dir = dir;
+                this.isBlocakble = isBlockable;
+                this.lifes = lifes;
+                this.sizeX = SizeX;
+                this.sizeY = SizeY;
             }
 
             public void hit()
@@ -207,7 +224,7 @@ namespace CommunicationInterface
             return find.state;
         }
 
-        public void CreateBullet(string name, int dir)
+        public void CreateBullet(string name, int spx, int spy)
         {
             playerclass find = playerslist.Where(c => c.name == name).FirstOrDefault();
             if (find == null) return;
@@ -225,7 +242,7 @@ namespace CommunicationInterface
                 case 3: mx -= dist; break;
             }
 
-            bulletlist.Add(new bullet(find.x+mx, find.y+my, find.direction));
+            bulletlist.Add(new bullet(find.x+mx, find.y+my, spx, spy));
         }
 
         public void MoveX(string name, int x)
@@ -246,7 +263,7 @@ namespace CommunicationInterface
 
         public void say(string x)
         {
-            if (sayCount > 5)
+            if (sayCount > countOfMessages)
             {
                 sayList = "";
                 sayCount = 0;
@@ -323,7 +340,7 @@ namespace CommunicationInterface
                a.move();
                foreach (var b in playerslist)
                {
-                   if(a.explosion(b.x, b.y, boxTank))
+                   if(b.state!=0 && a.explosion(b.x, b.y, b.sizeX, b.sizeY))
                    {
                        b.state = 0;
                        a.forDelele = true;
@@ -332,7 +349,7 @@ namespace CommunicationInterface
 
                foreach (var b in blockList)
                {
-                   if (a.explosion(b.x, b.y, boxBlock))
+                   if (a.explosion(b.x, b.y, b.sizeX, b.sizeY))
                    {
                        b.hit();
                        a.forDelele = true;
@@ -374,7 +391,7 @@ namespace CommunicationInterface
                case 2: my += dist; break;
                case 3: mx -= dist; break;
            }
-           blockList.Add(new block(find.x+mx, find.y+my, type));
+           blockList.Add(new block(find.x+mx, find.y+my, "brick", 0, true, 5, 100, boxBlock));
        }
     }
 }
