@@ -100,6 +100,7 @@ namespace render
             public double sizeX;
             public double sizeY;
             public int headDir;
+            public int frags;
 
             public playerclass(string _name, double sizex, double sizey)
             {

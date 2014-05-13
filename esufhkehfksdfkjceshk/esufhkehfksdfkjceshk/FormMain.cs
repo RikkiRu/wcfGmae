@@ -30,7 +30,13 @@ namespace esufhkehfksdfkjceshk
         [OperationContract]
         void addBlock(string name, int type);
         [OperationContract]
-        string logOrCreate(string name, Color color);
+        string logOrCreate(string name, Color color,string password);
+        [OperationContract]
+        void setdirect(string name, int dir);
+        [OperationContract]
+        void ping(string name);////////////////////////////////////////empty
+        [OperationContract]
+        void respawn(string name);
     }
 
    
@@ -43,7 +49,9 @@ namespace esufhkehfksdfkjceshk
         {
             InitializeComponent();
             panel2.Left = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2 - 78;
-            panel2.Top = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height / 2 - 90;
+            panel2.Top = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height / 2 - 100;
+            panel4.Left = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2 - 78;
+            panel4.Top = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height / 2 - 50;
         }
 
         //------------------------------------------------------------------
@@ -115,7 +123,9 @@ namespace esufhkehfksdfkjceshk
         {
             richTextBox1CHAT.Text = sayString;
         }
-
+        /// <summary>
+        /// //////////////////////////////////////////////////
+        /// </summary>
         public void method()
         {
             try
@@ -134,20 +144,24 @@ namespace esufhkehfksdfkjceshk
 
                 for (int i = 0; i < allPla.GetLength(0); i++)
                 {
-                    if (allPla[i] == "" || allPla[i]==" ") continue;
+                    if (allPla[i] == "" || allPla[i] == " ") continue;
                     string[] temp = allPla[i].Split('\t');
                     Render.playerclass p = new Render.playerclass(temp[0], Convert.ToDouble(temp[6]), Convert.ToDouble(temp[7]));
                     p.state = Convert.ToInt32(temp[1]);
                     p.direction = Convert.ToInt32(temp[2]);
                     p.headDir = Convert.ToInt32(temp[8]);
-
+                    p.frags = Convert.ToInt32(temp[9]);
                     string[] colStr = temp[3].Split('_');
                     p.color = Color.FromArgb(Convert.ToInt32(colStr[0]), Convert.ToInt32(colStr[1]), Convert.ToInt32(colStr[2]));
 
                     p.x = Convert.ToDouble(temp[4]);
                     p.y = Convert.ToDouble(temp[5]);
 
-                    if (p.name == Render.name) p.headDir = calculateAngle();
+                    if (p.name == Render.name) 
+                    {
+                        p.headDir = calculateAngle();
+                        service.setdirect(p.name, p.headDir);
+                    }
                     Render.playerslist.Add(p);
                 }
 
@@ -204,11 +218,11 @@ namespace esufhkehfksdfkjceshk
                         service.MoveX(textBox2_nickname.Text, 1);
                         if (waveOut.PlaybackState == PlaybackState.Paused) waveOut.Play();
                         break;
-                    case Keys.Space:
-                        dPoint t = calculateSpeed(player.headDir);
-                        service.CreateBullet(textBox2_nickname.Text, t.x,t.y);
-                        AudioPlaybackEngine.Instance.PlaySound(SoundFire);
-                        break;
+                    //case Keys.Space:
+                    //    dPoint t = calculateSpeed(player.headDir);
+                    //    service.CreateBullet(textBox2_nickname.Text, t.x,t.y);
+                    //    AudioPlaybackEngine.Instance.PlaySound(SoundFire);
+                    //    break;
                     case Keys.Q:
                         service.addBlock(textBox2_nickname.Text, 0);
                         break;
@@ -232,10 +246,13 @@ namespace esufhkehfksdfkjceshk
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            this.Text = formText;
-
             try
             {
+                var player = Render.playerslist.Where(c => c.name == textBox2_nickname.Text).FirstOrDefault();
+                this.Text = "Подбито: " + player.frags;
+                if ((player.state == 0) && (panel4.Visible == false))
+                    panel4.Visible = true;
+                if (player.state == 1) panel4.Visible = false;
                 Render.RenderMain();
                 glControl1.SwapBuffers();
             }
@@ -351,8 +368,8 @@ namespace esufhkehfksdfkjceshk
         {
             double nAnge = angle/57.0;
             dPoint res = new dPoint();
-            double resX = (Math.Sin(nAnge));
-            double resY = (Math.Cos(nAnge));
+            double resX = (Math.Sin(nAnge))*2;
+            double resY = (Math.Cos(nAnge))*2;
             formText = angle.ToString()+"    x "+resX.ToString() + "   y " + resY.ToString();
             res.x = (resX);
             res.y = -(resY);
@@ -363,6 +380,35 @@ namespace esufhkehfksdfkjceshk
         {
             mousePos.X = e.X;
             mousePos.Y = e.Y;
+        }
+
+        private void glControl1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (button2.Enabled) return;
+            var player = Render.playerslist.Where(c => c.name == textBox2_nickname.Text).FirstOrDefault();
+            if (player == null) return;
+            if (player.state == 0) return;
+            dPoint t = calculateSpeed(player.headDir);
+            service.CreateBullet(textBox2_nickname.Text, t.x, t.y);
+            AudioPlaybackEngine.Instance.PlaySound(SoundFire);
+        }
+
+        private void button1_Click_2(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var player = Render.playerslist.Where(c => c.name == textBox2_nickname.Text).FirstOrDefault();
+                service.respawn(player.name);
+                Thread.Sleep(100);
+                panel4.Visible = false;
+                glControl1.Focus();
+            }
+            catch { }
         }
 
     }

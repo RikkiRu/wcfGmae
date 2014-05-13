@@ -10,6 +10,34 @@ using System.Drawing;
 
 namespace CommunicationInterface
 {
+
+    [ServiceContract]
+    public interface IMyobject
+    {
+        [OperationContract]
+        object GetCommandString(object i, string player);
+        [OperationContract]
+        void MoveX(string name, double x);
+        [OperationContract]
+        void MoveY(string name, double y);
+        [OperationContract]
+        void CreateBullet(string name, double spx, double spy);
+        [OperationContract]
+        int state(string name);
+        [OperationContract]
+        void say(string say);
+        [OperationContract]
+        void addBlock(string name, int type);
+        [OperationContract]
+        string logOrCreate(string name, Color color,string password);
+        [OperationContract]
+        void setdirect(string name, int dir);
+        [OperationContract]
+        void ping(string name);//////////////////////////empty
+        [OperationContract]
+        void respawn(string name);
+    }
+
     public class MyObject : IMyobject
     {//
         public static List<playerclass> playerslist = new List<playerclass>();
@@ -22,8 +50,11 @@ namespace CommunicationInterface
         public static int boxTank = 10;
         public static int boxBlock = 10;
 
-        public const int countOfMessages = 100;
-
+        public const int countOfMessages = 50;
+        public void ping(string name)
+        {
+            //Console.WriteLine(name);
+        }
         public static bool IsInDistance (double x, double y, double ax, double ay, double distX, double distY)
         {
             double dx;
@@ -37,6 +68,16 @@ namespace CommunicationInterface
             if (dx < distX && dy < distY) return true;
             return false;
         }
+
+        public void respawn(string name)
+        {
+            var player = playerslist.Where(c => c.name == name).FirstOrDefault();
+            player.state = 1;
+            player.x = new Random().Next(300) - 150;
+            player.y = new Random().Next(300) - 150;
+            player.frags = 0;
+        }
+
 
         public static string retPlayerList(double x, double y)
         {
@@ -54,6 +95,7 @@ namespace CommunicationInterface
                     res += a.sizeX.ToString() + "\t";
                     res += a.sizeY.ToString() + "\t";
                     res += a.headDir.ToString() + "\t";
+                    res += a.frags.ToString() + "\t";
                     res += "\n";
                }
             }
@@ -105,13 +147,16 @@ namespace CommunicationInterface
             public int direction;
             public int state;
             public int headDir;
+            public int frags;
+            public string password;
 
-            public playerclass(string _name, Color color)
+            public playerclass(string _name, Color color, string password)
             {
                 name = _name;
-
+                this.password = password;
                 x = 0;
                 y = 0;
+                frags = 0;
                 while (!tryMove(0, 0))
                 {
                     x += 100;
@@ -150,16 +195,18 @@ namespace CommunicationInterface
 
         public class bullet
         {
+            public string nameplayer;
             public double x;
             public double y;
             double speedX;
             double speedY;
             const int distToExpl = 5;
-            public int lifetime = 30;
+            public int lifetime = 80;
             public bool forDelele = false;
 
-            public bullet(double x, double y, double speedX, double speedY)
+            public bullet(string nameplayer,double x, double y, double speedX, double speedY)
             {
+                this.nameplayer = nameplayer;
                 this.speedX = speedX;
                 this.speedY = speedY;
                 this.x = x;
@@ -177,7 +224,7 @@ namespace CommunicationInterface
 
             public bool explosion(double px, double py, double sizeX, double sizeY)
             {
-                return false;
+                //return false;
 
                 double dx = 0;
                 double dy = 0;
@@ -235,19 +282,9 @@ namespace CommunicationInterface
             if (find == null) return;
             if (find.state == 0) return;
 
-            double mx = 0;
-            double my = 0;
-            double dist = boxTank;
+            
 
-            switch (find.direction)
-            {
-                case 0: my -= dist; break;
-                case 1: mx += dist; break;
-                case 2: my += dist; break;
-                case 3: mx -= dist; break;
-            }
-
-            bulletlist.Add(new bullet(find.x+mx, find.y+my, spx, spy));
+            bulletlist.Add(new bullet(find.name, find.x+spx*6, find.y+spy*6, spx, spy));
         }
 
         public void MoveX(string name, double x)
@@ -300,17 +337,21 @@ namespace CommunicationInterface
             }
         }
 
-        public string logOrCreate(string name, Color color)
+        public string logOrCreate(string name, Color color,string password)
         {
             playerclass find = playerslist.Where(c => c.name == name).FirstOrDefault();
             if (find == null)
             {
                 Console.WriteLine("New player! - " + name);
-                playerclass player = new playerclass(name, color);
+                playerclass player = new playerclass(name, color, password);
                 playerslist.Add(player);
                 return "New player (" + name + ") created";
             }
-            else return "Вы подключились";
+            else 
+            {
+                if (find.password == password) return "Вы подключились";
+            };
+            return null;
         }
 
         public object GetCommandString(object i, string name)
@@ -338,6 +379,16 @@ namespace CommunicationInterface
             return null;
         }
 
+        public void setdirect(string name,int dir)
+        {
+            playerclass find = playerslist.Where(c => c.name == name).FirstOrDefault();
+            if ((find != null) &&(find.state==1))
+            {
+                find.headDir = dir;
+                //Console.WriteLine(dir);
+            }
+        }
+
        static public void work( object source, ElapsedEventArgs e )
         {
             try
@@ -350,6 +401,8 @@ namespace CommunicationInterface
                         if (b.state != 0 && a.explosion(b.x, b.y, b.sizeX, b.sizeY))
                         {
                             b.state = 0;
+                            var player = playerslist.Where(c => c.name == a.nameplayer).FirstOrDefault();
+                            player.frags++;
                             a.forDelele = true;
                         }
                     }
