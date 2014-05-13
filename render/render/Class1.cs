@@ -171,23 +171,37 @@ namespace render
 
             foreach (var a in playerslist)
             {
-                GL.PushMatrix();
-                Color t = a.color;
-                GL.Color3(t);
-                float angle = a.direction * 90.0f;
-                GL.Translate(a.x, a.y, 0);
-                GL.Rotate(angle, 0, 0, 1);
-                if (a.state == 1) drawQuad(texTank, -a.sizeX, -a.sizeY, a.sizeX, a.sizeY);
-                else drawQuad(texTankBroke, -a.sizeX, -a.sizeY, a.sizeX, a.sizeY);
-                GL.PopMatrix();
+                if (a.state != 1)
+                {
+                    GL.PushMatrix();
+                    Color t = a.color;
+                    GL.Color3(t);
+                    float angle = a.direction * 90.0f;
+                    GL.Translate(a.x, a.y, 0);
+                    GL.Rotate(angle, 0, 0, 1);
+                    drawQuad(texTankBroke, -a.sizeX, -a.sizeY, a.sizeX, a.sizeY);
+                    GL.PopMatrix();
+                }
+            }
 
+            foreach (var a in playerslist)
+            {
                 if (a.state == 1)
                 {
                     GL.PushMatrix();
+                    Color t = a.color;
+                    GL.Color3(t);
+                    float angle = a.direction * 90.0f;
+                    GL.Translate(a.x, a.y, 0);
+                    GL.Rotate(angle, 0, 0, 1);
+                    drawQuad(texTank, -a.sizeX, -a.sizeY, a.sizeX, a.sizeY);
+                    GL.PopMatrix();
+
+                    GL.PushMatrix();
                     GL.Translate(a.x, a.y, 0);
                     GL.Rotate(a.headDir, 0, 0, 1);
-                    drawQuad(texTankHead, -a.sizeX*1.5, -a.sizeY*1.5f, a.sizeX*1.5f, a.sizeY*1.5f);
-                    GL.PopMatrix();
+                    drawQuad(texTankHead, -a.sizeX * 1.5, -a.sizeY * 1.5f, a.sizeX * 1.5f, a.sizeY * 1.5f);
+                    GL.PopMatrix(); 
                 }
             }
 

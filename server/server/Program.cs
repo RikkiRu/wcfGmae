@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 //using System.Threading.Tasks;
 using System.ServiceModel;
-using CommunicationInterface;
 using System.Timers;
 using System.Drawing;
 
-namespace CommunicationInterface
+namespace server
 {
 
     [ServiceContract]
@@ -44,11 +43,13 @@ namespace CommunicationInterface
         public static List<bullet> bulletlist = new List<bullet>();
         public static List<block> blockList = new List<block>();
 
+        public static Random rand = new Random();
         public static string sayList="";
         public static int sayCount=0;
         public static int visibleDistance=150;
         public static int boxTank = 10;
         public static int boxBlock = 10;
+        public static int boxBullet = 2;
 
         public const int countOfMessages = 50;
         public void ping(string name)
@@ -73,11 +74,15 @@ namespace CommunicationInterface
         {
             var player = playerslist.Where(c => c.name == name).FirstOrDefault();
             player.state = 1;
-            player.x = new Random().Next(300) - 150;
-            player.y = new Random().Next(300) - 150;
+            player.x = 0;
+            player.y = 0;
+            while (!player.tryMove(0, 0))
+            {
+                if (rand.Next(0, 2) == 0) player.x += 100;
+                else player.y += 100;
+            }
             player.frags = 0;
         }
-
 
         public static string retPlayerList(double x, double y)
         {
@@ -159,7 +164,8 @@ namespace CommunicationInterface
                 frags = 0;
                 while (!tryMove(0, 0))
                 {
-                    x += 100;
+                    if (rand.Next(0, 2) == 0) x += 100;
+                    else y += 100;
                 }
 
                 sizeX = 10;
@@ -218,7 +224,7 @@ namespace CommunicationInterface
                 lifetime--;
                 if (lifetime < 0) forDelele = true;
                 x += speedX;
-                Console.WriteLine("x+" + speedX.ToString());
+                //Console.WriteLine("x+" + speedX.ToString());
                 y += speedY;
             }
 
@@ -266,7 +272,15 @@ namespace CommunicationInterface
             public void hit()
             {
                 lifes--;
-                if (lifes < 0) forDelete = true;
+
+                if (lifes < 0)
+                {
+                    switch (this.type)
+                    {
+                        case "house": type = "houseB"; lifes = 0; isBlocakble = false; break;
+                        default:  forDelete = true; break;
+                    }
+                }
             }
         }
 
@@ -281,9 +295,6 @@ namespace CommunicationInterface
             playerclass find = playerslist.Where(c => c.name == name).FirstOrDefault();
             if (find == null) return;
             if (find.state == 0) return;
-
-            
-
             bulletlist.Add(new bullet(find.name, find.x+spx*6, find.y+spy*6, spx, spy));
         }
 
@@ -364,7 +375,7 @@ namespace CommunicationInterface
                     {
                         var player = playerslist.Where(c => c.name == name).FirstOrDefault();
 
-                        Console.WriteLine(" - запрос списка игроков" + DateTime.Now.ToString());
+                        //Console.WriteLine(" - запрос списка игроков" + DateTime.Now.ToString());
                         string abv = MyObject.retPlayerList(player.x, player.y) + "&" + MyObject.retBullet(player.x, player.y) + "&" + MyObject.sayList + "&" + MyObject.retBlock(player.x, player.y); 
                         //Console.WriteLine(abv);
                         return abv;
@@ -410,13 +421,25 @@ namespace CommunicationInterface
 
                     foreach (var b in blockList)
                     {
-                        if (a.explosion(b.x, b.y, b.sizeX, b.sizeY))
+                        if (b.isBlocakble && a.explosion(b.x, b.y, b.sizeX, b.sizeY))
                         {
                             b.hit();
                             a.forDelele = true;
                         }
                     }
+
+                    foreach (var b in bulletlist)
+                    {
+                        if (a!=b && a.explosion(b.x, b.y, boxBullet, boxBullet))
+                        {
+                            a.forDelele = true;
+                            b.forDelele = true;
+                        }
+                    }
                 }
+
+
+
 
                 for (int i = bulletlist.Count - 1; i >= 0; i--)
                 {
@@ -459,24 +482,23 @@ namespace CommunicationInterface
            blockList.Add(new block(find.x+mx, find.y+my, "brick", 0, true, 5, 100, boxBlock));
        }
     }
-}
 
-namespace Server
-{
     class Program
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Загрузка... ждите");
             //ServiceHost host = new ServiceHost(typeof(MyObject), new Uri("http://19/"));
+            MyObject.blockList = generator.genAll();
             string http;
+            Console.WriteLine("Нажмите enter");
             http = Console.ReadLine();
             if (http == "") http = "localhost";
+            Console.WriteLine("Запуск... ждите");
             ServiceHost host = new ServiceHost(typeof(MyObject), new Uri("http://"+http+"/"));
             host.AddServiceEndpoint(typeof(IMyobject), new BasicHttpBinding(), "");
             host.Open();
-            Console.WriteLine("Сервер запущен");
-
-
+            Console.WriteLine("Сервер запущен. Enter для выхода.");
             Timer time = new Timer(30);
             time.Elapsed += new ElapsedEventHandler(MyObject.work);
             time.Start();
