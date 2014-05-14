@@ -18,11 +18,9 @@ namespace client
         [OperationContract]
         object GetCommandString(object i, string player);
         [OperationContract]
-        void MoveX(string name, double x);
+        void Move(string name, double x, double y);
         [OperationContract]
-        void MoveY(string name, double y);
-        [OperationContract]
-        void CreateBullet(string name, double spx, double spy);
+        bool CreateBullet(string name, double spx, double spy);
         [OperationContract]
         int state(string name);
         [OperationContract]
@@ -62,6 +60,7 @@ namespace client
         static ChannelFactory<IMyobject> factory;
         static IMyobject service;
 
+        static Random rand = new Random();
         string sayString="";
         string formText = "";
 
@@ -73,6 +72,7 @@ namespace client
 
         static Point mousePos = new Point();
 
+        static bool[] flagsMove = { false, false, false, false };
         //------------------------------------------------------------------
 
 
@@ -84,6 +84,7 @@ namespace client
         {
             try
             {
+                if (textBox1password.Text == "") throw new Exception("Редиска! Ты не ввел пароль.");
                 if (textBox2_nickname.Text == "") textBox2_nickname.Text = "unknown";
                 Render.name = textBox2_nickname.Text;
                 string htt = textBox3.Text;
@@ -97,13 +98,14 @@ namespace client
                 if (res == null) throw new Exception("Пароль не верный");
                 richTextBox1CHAT.Text += res + Environment.NewLine;
                 button2.Enabled = false;
-                button3.Enabled = false;
+                button3color.Enabled = false;
                 textBox2_nickname.Enabled = false;
                 panel3.Visible = true;
                 Render.playerslist.Clear();
                 textBox3.Enabled = false;
                 backgroundWorker1.RunWorkerAsync();
                 timer2.Enabled = true;
+                timer1move.Enabled = true;
                 service.say(DateTime.Now.ToShortTimeString() + " ) " + textBox2_nickname.Text + " connected");
                 glControl1.Focus();
                 panel2.Visible = false;
@@ -124,7 +126,10 @@ namespace client
         void setText()
         {
             richTextBox1CHAT.Text = sayString;
+            richTextBox1CHAT.SelectionStart = richTextBox1CHAT.TextLength;
+            //richTextBox1CHAT.ScrollToCaret();
         }
+
         /// <summary>
         /// //////////////////////////////////////////////////
         /// </summary>
@@ -181,6 +186,8 @@ namespace client
                     if (allBlock[i] == "" || allBlock[i] == " ") continue;
                     string[] temp = allBlock[i].Split('\t');
                     Render.block b = new Render.block(Convert.ToDouble(temp[0]), Convert.ToDouble(temp[1]), temp[2], Convert.ToInt32(temp[3]), Convert.ToDouble(temp[4]), Convert.ToDouble(temp[5]));
+                    //string[] colStr = temp[3].Split('_');
+                    //b.color = Color.FromArgb(Convert.ToInt32(colStr[0]), Convert.ToInt32(colStr[1]), Convert.ToInt32(colStr[2]));
                     Render.blockList.Add(b);
                 }
                 
@@ -205,33 +212,44 @@ namespace client
                 switch (e.KeyCode)
                 {
                     case Keys.W:
-                        service.MoveY(textBox2_nickname.Text, -1);
+                        flagsMove[0] = true;
+                        //service.MoveY(textBox2_nickname.Text, -1);
                         if (waveOut.PlaybackState == PlaybackState.Paused) waveOut.Play();
                         break;
                     case Keys.S:
-                        service.MoveY(textBox2_nickname.Text, 1);
+                        flagsMove[2] = true;
+                        //service.MoveY(textBox2_nickname.Text, 1);
                         if (waveOut.PlaybackState == PlaybackState.Paused) waveOut.Play();
                         break;
                     case Keys.A:
-                        service.MoveX(textBox2_nickname.Text, -1);
+                        flagsMove[3] = true;
+                        //service.MoveX(textBox2_nickname.Text, -1);
                         if (waveOut.PlaybackState == PlaybackState.Paused) waveOut.Play();
                         break;
                     case Keys.D:
-                        service.MoveX(textBox2_nickname.Text, 1);
+                        flagsMove[1] = true;
+                        //service.MoveX(textBox2_nickname.Text, 1);
                         if (waveOut.PlaybackState == PlaybackState.Paused) waveOut.Play();
                         break;
-                    //case Keys.Space:
-                    //    dPoint t = calculateSpeed(player.headDir);
-                    //    service.CreateBullet(textBox2_nickname.Text, t.x,t.y);
-                    //    AudioPlaybackEngine.Instance.PlaySound(SoundFire);
-                    //    break;
                     case Keys.Q:
                         service.addBlock(textBox2_nickname.Text, 0);
+                        break;
+                    case Keys.Tab:
+                        List<string> l1 = new List<string>();
+                        List<Color> l2 = new List<Color>();
+                        List<int> l3 = new List<int>();
+                        foreach(var a in Render.playerslist)
+                        {
+                            l1.Add(a.name);
+                            l2.Add(a.color);
+                            l3.Add(a.frags);
+                        }
+                        new FormPlayerList(l1, l2, l3).ShowDialog();
                         break;
                 }
             }
             catch
-            { }
+            {  }
             switch (e.KeyCode)
             {
                 case Keys.R: kamera*=2; break;
@@ -252,6 +270,7 @@ namespace client
             {
                 var player = Render.playerslist.Where(c => c.name == textBox2_nickname.Text).FirstOrDefault();
                 this.Text = "Подбито: " + player.frags;
+                this.label3coord.Text = "x: " + ((int)player.x).ToString() + "  y: " + ((int)player.y).ToString();
                 if ((player.state == 0) && (panel4.Visible == false))
                     panel4.Visible = true;
                 if (player.state == 1) panel4.Visible = false;
@@ -283,6 +302,7 @@ namespace client
             {
                 AudioPlaybackEngine.Instance.Dispose();
                 service.say(DateTime.Now.ToShortTimeString() + " ) " + textBox2_nickname.Text + " disconnected");
+                service.GetCommandString(2, textBox2_nickname.Text);
             }
             catch
             {
@@ -291,7 +311,9 @@ namespace client
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //this.WindowState = FormWindowState.Maximized;
+            Color cl = Color.FromArgb(rand.Next(100, 256), rand.Next(100, 256), rand.Next(100, 256));
+            colorDialog1.Color = cl;
+            button3color.BackColor = cl;
 
             GL.ClearColor(0.3f, 0.7f, 0.4f, 1.0f);
             GL.Enable(EnableCap.Texture2D);
@@ -308,12 +330,14 @@ namespace client
             Render.texBlocks.Add("road", new Render.Textures(@"tex/road.png"));
             Render.texTankHead = new Render.Textures(@"tex/tankHead.png");
             Render.texBlocks.Add("tree", new Render.Textures(@"tex/tree.png"));
+            Render.texBlocks.Add("treeB", new Render.Textures(@"tex/treeB.png"));
+            Render.texBlocks.Add("houseD", new Render.Textures(@"tex/domD.png"));
+            Render.texBlocks.Add("car", new Render.Textures(@"tex/car.png"));
+            Render.texBlocks.Add("carB", new Render.Textures(@"tex/carB.png"));
 
             waveOut.Init(loop);
             waveOut.Play();
             waveOut.Pause();
-
-            //glControl1.SwapBuffers();
         }
 
         private void timer2_Tick(object sender, EventArgs e)
@@ -325,7 +349,7 @@ namespace client
         private void button3_Click(object sender, EventArgs e)
         {
             colorDialog1.ShowDialog();
-            button3.BackColor = colorDialog1.Color;
+            button3color.BackColor = colorDialog1.Color;
         }
 
         private void button4playerList_Click(object sender, EventArgs e)
@@ -337,6 +361,11 @@ namespace client
         {
             //matrix(glControl1.Width, glControl1.Height);
             //glControl1.SwapBuffers();
+            try
+            {
+                Render.matrix(glControl1.Width, glControl1.Height);
+            }
+            catch { }
         }
 
         private void textBox4forSay_KeyDown(object sender, KeyEventArgs e)
@@ -351,11 +380,21 @@ namespace client
 
         private void FormMain_KeyUp(object sender, KeyEventArgs e)
         {
-            
-        }
-
-        private void dataGridView1_KeyUp(object sender, KeyEventArgs e)
-        {
+            switch (e.KeyCode)
+            {
+                case Keys.W:
+                    flagsMove[0] = false;
+                    break;
+                case Keys.D:
+                    flagsMove[1] = false;
+                    break;
+                case Keys.S:
+                    flagsMove[2] = false;
+                    break;
+                case Keys.A:
+                    flagsMove[3] = false;
+                    break;
+            }
         }
 
         int calculateAngle()
@@ -390,13 +429,16 @@ namespace client
 
         private void glControl1_MouseDown(object sender, MouseEventArgs e)
         {
-            if (button2.Enabled) return;
-            var player = Render.playerslist.Where(c => c.name == textBox2_nickname.Text).FirstOrDefault();
-            if (player == null) return;
-            if (player.state == 0) return;
-            dPoint t = calculateSpeed(player.headDir);
-            service.CreateBullet(textBox2_nickname.Text, t.x, t.y);
-            AudioPlaybackEngine.Instance.PlaySound(SoundFire);
+            try
+            {
+                if (button2.Enabled) return;
+                var player = Render.playerslist.Where(c => c.name == textBox2_nickname.Text).FirstOrDefault();
+                if (player == null) return;
+                if (player.state == 0) return;
+                dPoint t = calculateSpeed(player.headDir);
+                if(service.CreateBullet(textBox2_nickname.Text, t.x, t.y)) AudioPlaybackEngine.Instance.PlaySound(SoundFire);
+            }
+            catch { }
         }
 
         private void button1_Click_2(object sender, EventArgs e)
@@ -415,6 +457,57 @@ namespace client
                 glControl1.Focus();
             }
             catch { }
+        }
+
+        private void timer1move_Tick(object sender, EventArgs e)
+        {
+            if(flagsMove[0] && flagsMove[1])
+            { 
+                service.Move(textBox2_nickname.Text, 0.6, -0.6);
+                return;
+            }
+
+            if (flagsMove[1] && flagsMove[2])
+            {
+                service.Move(textBox2_nickname.Text, 0.6, 0.6);
+                return;
+            }
+
+            if (flagsMove[2] && flagsMove[3])
+            {
+                service.Move(textBox2_nickname.Text, -0.6, 0.6);
+                return;
+            }
+
+            if (flagsMove[0] && flagsMove[3])
+            {
+                service.Move(textBox2_nickname.Text, -0.6, -0.6);
+                return;
+            }
+
+            if (flagsMove[0])
+            {
+                service.Move(textBox2_nickname.Text, 0, -1);
+                return;
+            }
+
+            if (flagsMove[1])
+            {
+                service.Move(textBox2_nickname.Text, 1, 0);
+                return;
+            }
+
+            if (flagsMove[2])
+            {
+                service.Move(textBox2_nickname.Text, 0, 1);
+                return;
+            }
+
+            if (flagsMove[3])
+            {
+                service.Move(textBox2_nickname.Text, -1, 0);
+                return;
+            }
         }
 
     }

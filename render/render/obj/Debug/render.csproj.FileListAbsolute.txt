@@ -23,3 +23,8 @@ C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgameGT\wcfGmae\render\ren
 C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgameGT\wcfGmae\render\render\obj\Debug\render.csprojResolveAssemblyReference.cache
 C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgameGT\wcfGmae\render\render\obj\Debug\render.dll
 C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgameGT\wcfGmae\render\render\obj\Debug\render.pdb
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\giWcfGame\wcfGmae\render\render\bin\Debug\render.dll
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\giWcfGame\wcfGmae\render\render\bin\Debug\render.pdb
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\giWcfGame\wcfGmae\render\render\obj\Debug\render.csprojResolveAssemblyReference.cache
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\giWcfGame\wcfGmae\render\render\obj\Debug\render.dll
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\giWcfGame\wcfGmae\render\render\obj\Debug\render.pdb
