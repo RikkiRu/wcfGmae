@@ -60,3 +60,14 @@ C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgameGT\wcfGmae\client\cli
 C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgameGT\wcfGmae\client\client\bin\Debug\esufhkehfksdfkjceshk.pdb
 C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgameGT\wcfGmae\client\client\bin\Debug\render.dll
 C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgameGT\wcfGmae\client\client\bin\Debug\render.pdb
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\giWcfGame\wcfGmae\client\client\obj\Debug\esufhkehfksdfkjceshk.exe
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\giWcfGame\wcfGmae\client\client\obj\Debug\esufhkehfksdfkjceshk.pdb
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\giWcfGame\wcfGmae\client\client\bin\Debug\esufhkehfksdfkjceshk.exe
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\giWcfGame\wcfGmae\client\client\bin\Debug\esufhkehfksdfkjceshk.pdb
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\giWcfGame\wcfGmae\client\client\bin\Debug\render.dll
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\giWcfGame\wcfGmae\client\client\bin\Debug\render.pdb
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\giWcfGame\wcfGmae\client\client\obj\Debug\Clientform.csprojResolveAssemblyReference.cache
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\giWcfGame\wcfGmae\client\client\obj\Debug\client.FormMain.resources
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\giWcfGame\wcfGmae\client\client\obj\Debug\client.FormPlayerList.resources
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\giWcfGame\wcfGmae\client\client\obj\Debug\client.Properties.Resources.resources
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\giWcfGame\wcfGmae\client\client\obj\Debug\Clientform.csproj.GenerateResource.Cache

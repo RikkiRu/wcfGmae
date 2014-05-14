@@ -50,3 +50,9 @@ C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgameGT\wcfGmae\server\ser
 C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgameGT\wcfGmae\server\server\obj\Debug\server.csprojResolveAssemblyReference.cache
 C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgameGT\wcfGmae\server\server\bin\Debug\server.exe
 C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgameGT\wcfGmae\server\server\bin\Debug\server.pdb
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\giWcfGame\wcfGmae\server\server\bin\Debug\server.exe.config
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\giWcfGame\wcfGmae\server\server\obj\Debug\server.exe
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\giWcfGame\wcfGmae\server\server\obj\Debug\server.pdb
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\giWcfGame\wcfGmae\server\server\bin\Debug\server.exe
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\giWcfGame\wcfGmae\server\server\bin\Debug\server.pdb
+C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\giWcfGame\wcfGmae\server\server\obj\Debug\server.csprojResolveAssemblyReference.cache

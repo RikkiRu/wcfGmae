@@ -44,8 +44,8 @@ namespace server
         public static List<block> blockList = new List<block>();
 
         public static Random rand = new Random();
-        public static string sayList="";
-        public static int sayCount=0;
+        public static List<string> sayList=new List<string>();
+        public static int sayCount=5;
         public static int visibleDistance=150;
         public static int boxTank = 10;
         public static int boxBlock = 10;
@@ -74,12 +74,14 @@ namespace server
         {
             var player = playerslist.Where(c => c.name == name).FirstOrDefault();
             player.state = 1;
-            player.x = 0;
-            player.y = 0;
+            player.x = rand.Next(-100, 100);
+            player.y = rand.Next(-100, 100);
+            int mod = 1;
+            if (rand.Next(0, 2) == 0) mod = -1;
             while (!player.tryMove(0, 0))
             {
-                if (rand.Next(0, 2) == 0) player.x += 100;
-                else player.y += 100;
+                if (rand.Next(0, 2) == 0) player.x += 100*mod;
+                else player.y += 100*mod;
             }
             player.frags = 0;
         }
@@ -278,6 +280,7 @@ namespace server
                     switch (this.type)
                     {
                         case "house": type = "houseB"; lifes = 0; isBlocakble = false; break;
+                        case "tree": type = "treeB"; lifes = 0; isBlocakble = false; break;
                         default:  forDelete = true; break;
                     }
                 }
@@ -316,19 +319,12 @@ namespace server
 
         public void say(string x)
         {
-            if (sayCount > countOfMessages)
+            sayList.Add(x);
+            if (sayList.Count > sayCount)
             {
-                sayList = "";
-                sayCount = 0;
+                sayList.RemoveAt(0);
+                sayCount--;
             }
-            string res = "";
-            for (int i = 0; i < x.Length; i++)
-            {
-                if (x[i] != '&') res += x[i];
-            }
-            Console.WriteLine(res);
-            sayList+=res+Environment.NewLine;
-            sayCount++;
         }
 
         public void MoveY(string name, double y)
@@ -365,6 +361,16 @@ namespace server
             return null;
         }
 
+        static string retSay()
+        {
+            string res = "";
+            foreach(var a in sayList)
+            {
+                res += a + Environment.NewLine;
+            }
+            return res;
+        }
+
         public object GetCommandString(object i, string name)
         {
             if(i is int)
@@ -376,7 +382,7 @@ namespace server
                         var player = playerslist.Where(c => c.name == name).FirstOrDefault();
 
                         //Console.WriteLine(" - запрос списка игроков" + DateTime.Now.ToString());
-                        string abv = MyObject.retPlayerList(player.x, player.y) + "&" + MyObject.retBullet(player.x, player.y) + "&" + MyObject.sayList + "&" + MyObject.retBlock(player.x, player.y); 
+                        string abv = MyObject.retPlayerList(player.x, player.y) + "&" + MyObject.retBullet(player.x, player.y) + "&" + retSay() + "&" + MyObject.retBlock(player.x, player.y); 
                         //Console.WriteLine(abv);
                         return abv;
                     }
@@ -409,7 +415,7 @@ namespace server
                     a.move();
                     foreach (var b in playerslist)
                     {
-                        if (b.state != 0 && a.explosion(b.x, b.y, b.sizeX, b.sizeY))
+                        if (a.nameplayer!=b.name && b.state != 0 && a.explosion(b.x, b.y, b.sizeX, b.sizeY))
                         {
                             b.state = 0;
                             var player = playerslist.Where(c => c.name == a.nameplayer).FirstOrDefault();

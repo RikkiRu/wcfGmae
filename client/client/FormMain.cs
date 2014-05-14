@@ -124,7 +124,10 @@ namespace client
         void setText()
         {
             richTextBox1CHAT.Text = sayString;
+            richTextBox1CHAT.SelectionStart = richTextBox1CHAT.TextLength;
+            //richTextBox1CHAT.ScrollToCaret();
         }
+
         /// <summary>
         /// //////////////////////////////////////////////////
         /// </summary>
@@ -220,11 +223,6 @@ namespace client
                         service.MoveX(textBox2_nickname.Text, 1);
                         if (waveOut.PlaybackState == PlaybackState.Paused) waveOut.Play();
                         break;
-                    //case Keys.Space:
-                    //    dPoint t = calculateSpeed(player.headDir);
-                    //    service.CreateBullet(textBox2_nickname.Text, t.x,t.y);
-                    //    AudioPlaybackEngine.Instance.PlaySound(SoundFire);
-                    //    break;
                     case Keys.Q:
                         service.addBlock(textBox2_nickname.Text, 0);
                         break;
@@ -308,6 +306,7 @@ namespace client
             Render.texBlocks.Add("road", new Render.Textures(@"tex/road.png"));
             Render.texTankHead = new Render.Textures(@"tex/tankHead.png");
             Render.texBlocks.Add("tree", new Render.Textures(@"tex/tree.png"));
+            Render.texBlocks.Add("treeB", new Render.Textures(@"tex/treeB.png"));
 
             waveOut.Init(loop);
             waveOut.Play();
@@ -390,13 +389,17 @@ namespace client
 
         private void glControl1_MouseDown(object sender, MouseEventArgs e)
         {
-            if (button2.Enabled) return;
-            var player = Render.playerslist.Where(c => c.name == textBox2_nickname.Text).FirstOrDefault();
-            if (player == null) return;
-            if (player.state == 0) return;
-            dPoint t = calculateSpeed(player.headDir);
-            service.CreateBullet(textBox2_nickname.Text, t.x, t.y);
-            AudioPlaybackEngine.Instance.PlaySound(SoundFire);
+            try
+            {
+                if (button2.Enabled) return;
+                var player = Render.playerslist.Where(c => c.name == textBox2_nickname.Text).FirstOrDefault();
+                if (player == null) return;
+                if (player.state == 0) return;
+                dPoint t = calculateSpeed(player.headDir);
+                service.CreateBullet(textBox2_nickname.Text, t.x, t.y);
+                AudioPlaybackEngine.Instance.PlaySound(SoundFire);
+            }
+            catch { }
         }
 
         private void button1_Click_2(object sender, EventArgs e)

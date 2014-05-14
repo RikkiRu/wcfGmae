@@ -22,6 +22,7 @@ namespace server
 
             for (int i = 0; i < 10; i++)
             {
+                px = 0;
                 for (int j = 0; j < 10; j++)
                 {
                     switch (rand.Next(0, 5))
@@ -39,7 +40,6 @@ namespace server
                     px += distX;
                 }
                 py += distY;
-                px = 0;
             }
 
             return res;
