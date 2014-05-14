@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 //using System.Threading.Tasks;
 using System.ServiceModel;
-using CommunicationInterface;
 using System.Timers;
 using System.Drawing;
 
-namespace CommunicationInterface
+namespace server
 {
 
     [ServiceContract]
@@ -17,11 +16,9 @@ namespace CommunicationInterface
         [OperationContract]
         object GetCommandString(object i, string player);
         [OperationContract]
-        void MoveX(string name, double x);
+        void Move(string name, double x, double y);
         [OperationContract]
-        void MoveY(string name, double y);
-        [OperationContract]
-        void CreateBullet(string name, double spx, double spy);
+        bool CreateBullet(string name, double spx, double spy);
         [OperationContract]
         int state(string name);
         [OperationContract]
@@ -44,11 +41,13 @@ namespace CommunicationInterface
         public static List<bullet> bulletlist = new List<bullet>();
         public static List<block> blockList = new List<block>();
 
-        public static string sayList="";
-        public static int sayCount=0;
+        public static Random rand = new Random();
+        public static List<string> sayList=new List<string>();
+        public static int sayCount=6;
         public static int visibleDistance=150;
         public static int boxTank = 10;
         public static int boxBlock = 10;
+        public static int boxBullet = 2;
 
         public const int countOfMessages = 50;
         public void ping(string name)
@@ -73,18 +72,29 @@ namespace CommunicationInterface
         {
             var player = playerslist.Where(c => c.name == name).FirstOrDefault();
             player.state = 1;
-            player.x = new Random().Next(300) - 150;
-            player.y = new Random().Next(300) - 150;
-            player.frags = 0;
+            getRandomPlacePlayer(name);
         }
 
+        public static void getRandomPlacePlayer(string name)
+        {
+            var player = playerslist.Where(c => c.name == name).FirstOrDefault();
+            player.x = rand.Next(-300, 300);
+            player.y = rand.Next(-300, 300);
+            int mod = 1;
+            if (rand.Next(0, 2) == 0) mod = -1;
+            while (!player.tryMove(0, 0))
+            {
+                if (rand.Next(0, 2) == 0) player.x += 100 * mod;
+                else player.y += 100 * mod;
+            }
+        }
 
         public static string retPlayerList(double x, double y)
         {
             string res = "";
             foreach(var a in playerslist)
             {
-               if (IsInDistance(x, y, a.x, a.y, visibleDistance, visibleDistance))
+               if (a.isOnline)
                {
                     res += a.name + "\t";
                     res += a.state.ToString() + "\t";
@@ -130,6 +140,7 @@ namespace CommunicationInterface
                     res += a.dir.ToString() + "\t";
                     res += a.sizeX.ToString() + "\t";
                     res += a.sizeY.ToString() + "\t";
+                    //res += a.color.R.ToString() + "_" + a.color.G + "_" + a.color.B + "\t";
                     res += "\n";
                 }
             }
@@ -149,25 +160,20 @@ namespace CommunicationInterface
             public int headDir;
             public int frags;
             public string password;
+            public bool isOnline;
+            public int timeToShot = 0;
 
             public playerclass(string _name, Color color, string password)
             {
                 name = _name;
                 this.password = password;
-                x = 0;
-                y = 0;
                 frags = 0;
-                while (!tryMove(0, 0))
-                {
-                    x += 100;
-                }
-
                 sizeX = 10;
                 sizeY = 10;
                 if (name == "god") sizeX = sizeY = 50;
-
                 this.color = color;
                 state = 1;
+                //MyObject.getRandomPlacePlayer(_name);
             }
 
             public bool tryMove(double x, double y)
@@ -177,14 +183,23 @@ namespace CommunicationInterface
 
                 foreach (var a in playerslist)
                 {
-                    if (a == this || a.state==0) continue;
+                    if (a == this || a.state==0 || a.isOnline==false) continue;
 
                     if (IsInDistance(dx, dy, a.x, a.y, a.sizeX + this.sizeX / 2, a.sizeY + this.sizeY / 2)) return false;
                 }
 
                 foreach (var a in blockList)
                 {
-                    if (a.isBlocakble && IsInDistance(dx, dy, a.x, a.y, a.sizeX + this.sizeX / 2, a.sizeY + this.sizeY / 2)) return false;
+                    if (a.isBlocakble && IsInDistance(dx, dy, a.x, a.y, a.sizeX + this.sizeX / 2, a.sizeY + this.sizeY / 2))
+                    {
+                        switch (a.type)
+                        {
+                            case "tree": a.type = "treeB"; a.isBlocakble = false; return true;
+                            case "houseD": a.type = "houseB"; a.isBlocakble = false; return true;
+                            case "car": a.type = "carB"; a.isBlocakble = false; return true;
+                        }
+                        return false;
+                    }
                 }
 
                 this.x = dx;
@@ -218,7 +233,7 @@ namespace CommunicationInterface
                 lifetime--;
                 if (lifetime < 0) forDelele = true;
                 x += speedX;
-                Console.WriteLine("x+" + speedX.ToString());
+                //Console.WriteLine("x+" + speedX.ToString());
                 y += speedY;
             }
 
@@ -250,6 +265,7 @@ namespace CommunicationInterface
             public bool forDelete=false;
             public int dir;
             public bool isBlocakble;
+            public Color color;
 
             public block(double x, double y, string type, int dir, bool isBlockable, int lifes, int SizeX, int SizeY)
             {
@@ -261,12 +277,24 @@ namespace CommunicationInterface
                 this.lifes = lifes;
                 this.sizeX = SizeX;
                 this.sizeY = SizeY;
+                this.color = Color.White;
             }
 
             public void hit()
             {
                 lifes--;
-                if (lifes < 0) forDelete = true;
+
+                if (lifes < 0)
+                {
+                    switch (this.type)
+                    {
+                        case "house": type = "houseD"; lifes = 0; break;
+                        case "houseD": type = "houseB"; isBlocakble = false; break;
+                        case "car": type = "carB"; isBlocakble = false; break;
+                        case "tree": type = "treeB"; isBlocakble = false; break;
+                        default:  forDelete = true; break;
+                    }
+                }
             }
         }
 
@@ -276,64 +304,77 @@ namespace CommunicationInterface
             return find.state;
         }
 
-        public void CreateBullet(string name, double spx, double spy)
+        public bool CreateBullet(string name, double spx, double spy)
         {
             playerclass find = playerslist.Where(c => c.name == name).FirstOrDefault();
-            if (find == null) return;
-            if (find.state == 0) return;
-
-            
-
+            if (find.timeToShot != 0) { return false; }
+            if (find == null) return false;
+            if (find.state == 0) return false;
+         
             bulletlist.Add(new bullet(find.name, find.x+spx*6, find.y+spy*6, spx, spy));
+            find.timeToShot = 60;
+            return true;
         }
 
-        public void MoveX(string name, double x)
+        public void Move(string name, double x, double y)
         {
             playerclass find = playerslist.Where(c => c.name == name).FirstOrDefault();
             if (find.state != 0)
             {
                 if (find == null) return;
+                if (!find.tryMove(x, y)) return;
+                //Console.WriteLine(x.ToString() + " " + y.ToString());
 
-                int dir = 0;
-                if (x > 0) dir = 1;
-                else dir = 3;
-
-                find.tryMove(x, 0);
-                find.direction = dir;
+                if(x>0 && y>0)
+                {
+                    find.direction = 3;
+                    return;
+                }
+                if(x>0 && y<0)
+                {
+                    find.direction = 1;
+                    return;
+                }
+                if(x<0 && y>0)
+                {
+                    find.direction = 5;
+                    return;
+                }
+                if(x<0 && y<0)
+                {
+                    find.direction = 7;
+                    return;
+                }
+                if(x>0)
+                {
+                    find.direction = 2;
+                    return;
+                }
+                if(x<0)
+                {
+                    find.direction = 6;
+                    return;
+                }
+                if(y>0)
+                {
+                    find.direction = 4;
+                    return;
+                }
+                if(y<0)
+                {
+                    find.direction = 0;
+                    return;
+                }
             }
         }
 
         public void say(string x)
         {
-            if (sayCount > countOfMessages)
+            sayList.Add(x);
+            if (sayList.Count > sayCount)
             {
-                sayList = "";
-                sayCount = 0;
-            }
-            string res = "";
-            for (int i = 0; i < x.Length; i++)
-            {
-                if (x[i] != '&') res += x[i];
-            }
-            Console.WriteLine(res);
-            sayList+=res+Environment.NewLine;
-            sayCount++;
-        }
-
-        public void MoveY(string name, double y)
-        {
-            playerclass find = playerslist.Where(c => c.name == name).FirstOrDefault();
-            if (find.state != 0)
-            {
-                if (find == null) return;
-
-                int dir = 0;
-                
-                if (y > 0) dir = 2;
-                else dir = 0;
-
-                find.tryMove(0, y);
-                find.direction = dir;
+                sayList.RemoveAt(0);
+                sayCount--;
             }
         }
 
@@ -345,6 +386,7 @@ namespace CommunicationInterface
                 Console.WriteLine("New player! - " + name);
                 playerclass player = new playerclass(name, color, password);
                 playerslist.Add(player);
+                MyObject.getRandomPlacePlayer(name);
                 return "New player (" + name + ") created";
             }
             else 
@@ -353,6 +395,20 @@ namespace CommunicationInterface
             };
             return null;
         }
+
+        static string retSay()
+        {
+            string res = "";
+            foreach(var a in sayList)
+            {
+                res += a + Environment.NewLine;
+            }
+            return res;
+        }
+
+        ///getcomanstring
+        ///getcomanstring
+        ///getcomanstring
 
         public object GetCommandString(object i, string name)
         {
@@ -363,9 +419,9 @@ namespace CommunicationInterface
                     try
                     {
                         var player = playerslist.Where(c => c.name == name).FirstOrDefault();
-
-                        Console.WriteLine(" - запрос списка игроков" + DateTime.Now.ToString());
-                        string abv = MyObject.retPlayerList(player.x, player.y) + "&" + MyObject.retBullet(player.x, player.y) + "&" + MyObject.sayList + "&" + MyObject.retBlock(player.x, player.y); 
+                        player.isOnline = true;
+                        //Console.WriteLine(" - запрос списка игроков" + DateTime.Now.ToString());
+                        string abv = MyObject.retPlayerList(player.x, player.y) + "&" + MyObject.retBullet(player.x, player.y) + "&" + retSay() + "&" + MyObject.retBlock(player.x, player.y); 
                         //Console.WriteLine(abv);
                         return abv;
                     }
@@ -373,6 +429,16 @@ namespace CommunicationInterface
                     {
                         return " & & ";
                     }
+
+                case 2: //игрок передал что он оффлайн
+                    try
+                    {
+                        var player = playerslist.Where(c => c.name == name).FirstOrDefault();
+                        player.isOnline = false;
+                    }
+                    catch { }
+                    break;
+
                 default:
                     return "Получил " + Convert.ToString(i);
             }
@@ -393,12 +459,19 @@ namespace CommunicationInterface
         {
             try
             {
+                //Console.WriteLine(playerslist[0].direction.ToString());
+
+                foreach (var a in playerslist)
+                {
+                    if (a.timeToShot > 0) a.timeToShot--;
+                }
+
                 foreach (var a in bulletlist)
                 {
                     a.move();
                     foreach (var b in playerslist)
                     {
-                        if (b.state != 0 && a.explosion(b.x, b.y, b.sizeX, b.sizeY))
+                        if (a.nameplayer!=b.name && b.isOnline && b.state != 0 && a.explosion(b.x, b.y, b.sizeX, b.sizeY))
                         {
                             b.state = 0;
                             var player = playerslist.Where(c => c.name == a.nameplayer).FirstOrDefault();
@@ -410,13 +483,25 @@ namespace CommunicationInterface
 
                     foreach (var b in blockList)
                     {
-                        if (a.explosion(b.x, b.y, b.sizeX, b.sizeY))
+                        if (b.isBlocakble && a.explosion(b.x, b.y, b.sizeX, b.sizeY))
                         {
                             b.hit();
                             a.forDelele = true;
                         }
                     }
+
+                    foreach (var b in bulletlist)
+                    {
+                        if (a!=b && a.explosion(b.x, b.y, boxBullet, boxBullet))
+                        {
+                            a.forDelele = true;
+                            b.forDelele = true;
+                        }
+                    }
                 }
+
+
+
 
                 for (int i = bulletlist.Count - 1; i >= 0; i--)
                 {
@@ -458,29 +543,36 @@ namespace CommunicationInterface
            }
            blockList.Add(new block(find.x+mx, find.y+my, "brick", 0, true, 5, 100, boxBlock));
        }
-    }
-}
 
-namespace Server
-{
+        //делает всех оффлайн
+       public static void setOffline(object source, ElapsedEventArgs e)
+       {
+           foreach (var a in playerslist) a.isOnline = false;
+       }
+    }
+
     class Program
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Загрузка... ждите");
             //ServiceHost host = new ServiceHost(typeof(MyObject), new Uri("http://19/"));
+            MyObject.blockList = generator.genAll();
             string http;
+            Console.WriteLine("Нажмите enter");
             http = Console.ReadLine();
             if (http == "") http = "localhost";
+            Console.WriteLine("Запуск... ждите");
             ServiceHost host = new ServiceHost(typeof(MyObject), new Uri("http://"+http+"/"));
             host.AddServiceEndpoint(typeof(IMyobject), new BasicHttpBinding(), "");
             host.Open();
-            Console.WriteLine("Сервер запущен");
-
-
+            Console.WriteLine("Сервер запущен. Enter для выхода.");
             Timer time = new Timer(30);
+            Timer timerSlow = new Timer(60000);
             time.Elapsed += new ElapsedEventHandler(MyObject.work);
             time.Start();
-
+            timerSlow.Elapsed += new ElapsedEventHandler(MyObject.setOffline);
+            timerSlow.Start();
             Console.ReadLine();
 
             host.Close();
