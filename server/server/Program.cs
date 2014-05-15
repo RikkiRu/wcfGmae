@@ -7,6 +7,7 @@ using System.ServiceModel;
 using System.Timers;
 using System.Drawing;
 
+
 namespace server
 {
 
@@ -14,7 +15,7 @@ namespace server
     public interface IMyobject
     {
         [OperationContract]
-        object GetCommandString(object i, string player);
+        string[] GetCommandString(object i, string player);
         [OperationContract]
         void Move(string name, double x, double y);
         [OperationContract]
@@ -30,7 +31,7 @@ namespace server
         [OperationContract]
         void setdirect(string name, int dir);
         [OperationContract]
-        void ping(string name);//////////////////////////empty
+        void ping(string name);
         [OperationContract]
         void respawn(string name);
     }
@@ -140,7 +141,7 @@ namespace server
                     res += a.dir.ToString() + "\t";
                     res += a.sizeX.ToString() + "\t";
                     res += a.sizeY.ToString() + "\t";
-                    //res += a.color.R.ToString() + "_" + a.color.G + "_" + a.color.B + "\t";
+                    res += a.color.R.ToString() + "_" + a.color.G + "_" + a.color.B + "\t";
                     res += "\n";
                 }
             }
@@ -410,7 +411,7 @@ namespace server
         ///getcomanstring
         ///getcomanstring
 
-        public object GetCommandString(object i, string name)
+        public string[] GetCommandString(object i, string name)
         {
             if(i is int)
             switch (Convert.ToInt32(i))
@@ -421,13 +422,17 @@ namespace server
                         var player = playerslist.Where(c => c.name == name).FirstOrDefault();
                         player.isOnline = true;
                         //Console.WriteLine(" - запрос списка игроков" + DateTime.Now.ToString());
-                        string abv = MyObject.retPlayerList(player.x, player.y) + "&" + MyObject.retBullet(player.x, player.y) + "&" + retSay() + "&" + MyObject.retBlock(player.x, player.y); 
+                        string[] abv = new string[4];
+                        abv[0] = MyObject.retPlayerList(player.x, player.y);
+                        abv[1] = MyObject.retBullet(player.x, player.y);
+                        abv[2] = retSay();
+                        abv[3] = MyObject.retBlock(player.x, player.y); 
                         //Console.WriteLine(abv);
                         return abv;
                     }
                     catch
                     {
-                        return " & & ";
+                        return null;
                     }
 
                 case 2: //игрок передал что он оффлайн
@@ -440,7 +445,7 @@ namespace server
                     break;
 
                 default:
-                    return "Получил " + Convert.ToString(i);
+                    return null;
             }
             return null;
         }
@@ -555,6 +560,7 @@ namespace server
     {
         static void Main(string[] args)
         {
+       
             Console.WriteLine("Загрузка... ждите");
             //ServiceHost host = new ServiceHost(typeof(MyObject), new Uri("http://19/"));
             MyObject.blockList = generator.genAll();
@@ -563,7 +569,7 @@ namespace server
             http = Console.ReadLine();
             if (http == "") http = "localhost";
             Console.WriteLine("Запуск... ждите");
-            ServiceHost host = new ServiceHost(typeof(MyObject), new Uri("http://"+http+"/"));
+            ServiceHost host = new ServiceHost(typeof(MyObject), new Uri("http://" + http + "/"));
             host.AddServiceEndpoint(typeof(IMyobject), new BasicHttpBinding(), "");
             host.Open();
             Console.WriteLine("Сервер запущен. Enter для выхода.");

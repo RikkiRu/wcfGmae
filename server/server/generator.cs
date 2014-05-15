@@ -35,7 +35,7 @@ namespace server
                             break;
                         default:
                             res.Add(new MyObject.block(px, py, "road", 0, false, 0, sizeX, sizeY));
-                            if (rand.Next(0, 10) == 0)
+                            if (rand.Next(0, 3) == 0)
                             {
                                 var a = new MyObject.block(px, py, "car", rand.Next(0, 360), true, 0, sizeX / 2, sizeY / 2);
                                 a.color = Color.FromArgb(rand.Next(100, 256), rand.Next(100, 256), rand.Next(100, 256));

@@ -16,7 +16,7 @@ namespace client
     public interface IMyobject
     {
         [OperationContract]
-        object GetCommandString(object i, string player);
+        string[] GetCommandString(object i, string player);
         [OperationContract]
         void Move(string name, double x, double y);
         [OperationContract]
@@ -63,6 +63,8 @@ namespace client
         static Random rand = new Random();
         string sayString="";
         string formText = "";
+        static double SpeedSlow = 0.6;
+        static double Speed = 1;
 
         public static float kamera=1;
 
@@ -89,11 +91,16 @@ namespace client
                 Render.name = textBox2_nickname.Text;
                 string htt = textBox3.Text;
                 if (htt == "") htt = "localhost";
+
+             
+                
+
                 tcpUri = new Uri("http://" + htt + "/");
                 address = new EndpointAddress(tcpUri);
                 binding = new BasicHttpBinding();
                 factory = new ChannelFactory<IMyobject>(binding, address);
                 service = factory.CreateChannel();
+
                 string res = service.logOrCreate(textBox2_nickname.Text, colorDialog1.Color, textBox1password.Text);
                 if (res == null) throw new Exception("Пароль не верный");
                 richTextBox1CHAT.Text += res + Environment.NewLine;
@@ -137,13 +144,11 @@ namespace client
         {
             try
             {
-                string x = service.GetCommandString(1, textBox2_nickname.Text).ToString();
-
                 Render.playerslist.Clear();
                 Render.bulletList.Clear();
                 Render.blockList.Clear();
 
-                string[] x2 = x.Split('&');
+                string[] x2 = service.GetCommandString(1, textBox2_nickname.Text);
                 string[] allPla = x2[0].Split('\n');
                 string[] allBull = x2[1].Split('\n');
                 sayString = x2[2];
@@ -186,8 +191,8 @@ namespace client
                     if (allBlock[i] == "" || allBlock[i] == " ") continue;
                     string[] temp = allBlock[i].Split('\t');
                     Render.block b = new Render.block(Convert.ToDouble(temp[0]), Convert.ToDouble(temp[1]), temp[2], Convert.ToInt32(temp[3]), Convert.ToDouble(temp[4]), Convert.ToDouble(temp[5]));
-                    //string[] colStr = temp[3].Split('_');
-                    //b.color = Color.FromArgb(Convert.ToInt32(colStr[0]), Convert.ToInt32(colStr[1]), Convert.ToInt32(colStr[2]));
+                    string[] colStr = temp[6].Split('_');
+                    b.color = Color.FromArgb(Convert.ToInt32(colStr[0]), Convert.ToInt32(colStr[1]), Convert.ToInt32(colStr[2]));
                     Render.blockList.Add(b);
                 }
                 
@@ -463,49 +468,49 @@ namespace client
         {
             if(flagsMove[0] && flagsMove[1])
             { 
-                service.Move(textBox2_nickname.Text, 0.6, -0.6);
+                service.Move(textBox2_nickname.Text, SpeedSlow, -SpeedSlow);
                 return;
             }
 
             if (flagsMove[1] && flagsMove[2])
             {
-                service.Move(textBox2_nickname.Text, 0.6, 0.6);
+                service.Move(textBox2_nickname.Text, SpeedSlow, SpeedSlow);
                 return;
             }
 
             if (flagsMove[2] && flagsMove[3])
             {
-                service.Move(textBox2_nickname.Text, -0.6, 0.6);
+                service.Move(textBox2_nickname.Text, -SpeedSlow, SpeedSlow);
                 return;
             }
 
             if (flagsMove[0] && flagsMove[3])
             {
-                service.Move(textBox2_nickname.Text, -0.6, -0.6);
+                service.Move(textBox2_nickname.Text, -SpeedSlow, -SpeedSlow);
                 return;
             }
 
             if (flagsMove[0])
             {
-                service.Move(textBox2_nickname.Text, 0, -1);
+                service.Move(textBox2_nickname.Text, 0, -Speed);
                 return;
             }
 
             if (flagsMove[1])
             {
-                service.Move(textBox2_nickname.Text, 1, 0);
+                service.Move(textBox2_nickname.Text, Speed, 0);
                 return;
             }
 
             if (flagsMove[2])
             {
-                service.Move(textBox2_nickname.Text, 0, 1);
+                service.Move(textBox2_nickname.Text, 0, Speed);
                 return;
             }
 
             if (flagsMove[3])
             {
-                service.Move(textBox2_nickname.Text, -1, 0);
+                service.Move(textBox2_nickname.Text, -Speed, 0);
                 return;
             }
         }
