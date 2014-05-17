@@ -283,6 +283,7 @@ namespace client
             Render.texTankHead = new Render.Textures(@"tex/tankHead.png");
             Render.texBlocks.Add("tree", new Render.Textures(@"tex/tree.png"));
             Render.texBlocks.Add("treeB", new Render.Textures(@"tex/treeB.png"));
+<<<<<<< HEAD
             Render.texBlocks.Add("houseD", new Render.Textures(@"tex/domD.png"));
             Render.texBlocks.Add("car", new Render.Textures(@"tex/car.png"));
             Render.texBlocks.Add("carB", new Render.Textures(@"tex/carB.png"));
@@ -295,6 +296,8 @@ namespace client
 
             Render.blockList.updElem = getBlocksUpd;
             Render.blockList.createElem = getFullBlock;
+=======
+>>>>>>> 71b5d0683f0bb5cdcd35b290b663a44ed5a5dc5c
 
             waveOut.Init(loop);
             waveOut.Play();
@@ -388,11 +391,20 @@ namespace client
             try
             {
                 if (button2.Enabled) return;
+<<<<<<< HEAD
                 var player = Render.playerslist.elements.Where(c => c.name == textBox2_nickname.Text).FirstOrDefault();
                 if (player == null) return;
                 if (player.state == 0) return;
                 dPoint t = calculateSpeed(player.headDir);
                 if(service.CreateBullet(textBox2_nickname.Text, t.x, t.y)) AudioPlaybackEngine.Instance.PlaySound(SoundFire);
+=======
+                var player = Render.playerslist.Where(c => c.name == textBox2_nickname.Text).FirstOrDefault();
+                if (player == null) return;
+                if (player.state == 0) return;
+                dPoint t = calculateSpeed(player.headDir);
+                service.CreateBullet(textBox2_nickname.Text, t.x, t.y);
+                AudioPlaybackEngine.Instance.PlaySound(SoundFire);
+>>>>>>> 71b5d0683f0bb5cdcd35b290b663a44ed5a5dc5c
             }
             catch { }
         }

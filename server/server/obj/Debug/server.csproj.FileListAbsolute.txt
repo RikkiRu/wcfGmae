@@ -56,5 +56,8 @@ C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\giWcfGame\wcfGmae
 C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\giWcfGame\wcfGmae\server\server\bin\Debug\server.exe
 C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\giWcfGame\wcfGmae\server\server\bin\Debug\server.pdb
 C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\giWcfGame\wcfGmae\server\server\obj\Debug\server.csprojResolveAssemblyReference.cache
+<<<<<<< HEAD
 C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgameGT\wcfGmae\server\server\bin\Debug\structureClasses.dll
 C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgameGT\wcfGmae\server\server\bin\Debug\structureClasses.pdb
+=======
+>>>>>>> 71b5d0683f0bb5cdcd35b290b663a44ed5a5dc5c

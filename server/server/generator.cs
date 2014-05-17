@@ -24,7 +24,12 @@ namespace server
 
             for (int i = 0; i < 50; i++)
             {
+<<<<<<< HEAD
                 for (int j = 0; j < 50; j++)
+=======
+                px = 0;
+                for (int j = 0; j < 10; j++)
+>>>>>>> 71b5d0683f0bb5cdcd35b290b663a44ed5a5dc5c
                 {
                     switch (rand.Next(0, 5))
                     {
@@ -47,7 +52,10 @@ namespace server
                     px += distX;
                 }
                 py += distY;
+<<<<<<< HEAD
                 px = -500;
+=======
+>>>>>>> 71b5d0683f0bb5cdcd35b290b663a44ed5a5dc5c
             }
 
             //res.Add(add(-20, -20, "house", 0, true, 0, sizeX, sizeY));

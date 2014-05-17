@@ -42,10 +42,20 @@ namespace server
     {//
         public static Random rand = new Random();
         public static List<string> sayList=new List<string>();
+<<<<<<< HEAD
         public static int sayCount=6;
         public static int visibleDistance=100;
         public static int bulletLife = 20;
 
+=======
+        public static int sayCount=5;
+        public static int visibleDistance=150;
+        public static int boxTank = 10;
+        public static int boxBlock = 10;
+        public static int boxBullet = 2;
+
+        public const int countOfMessages = 50;
+>>>>>>> 71b5d0683f0bb5cdcd35b290b663a44ed5a5dc5c
         public void ping(string name)
         {
             //Console.WriteLine(name);
@@ -56,7 +66,20 @@ namespace server
         {
             var player = manager.players.elements.Where(c => c.name == name).FirstOrDefault();
             player.state = 1;
+<<<<<<< HEAD
             getRandomPlacePlayer(name);
+=======
+            player.x = rand.Next(-100, 100);
+            player.y = rand.Next(-100, 100);
+            int mod = 1;
+            if (rand.Next(0, 2) == 0) mod = -1;
+            while (!player.tryMove(0, 0))
+            {
+                if (rand.Next(0, 2) == 0) player.x += 100*mod;
+                else player.y += 100*mod;
+            }
+            player.frags = 0;
+>>>>>>> 71b5d0683f0bb5cdcd35b290b663a44ed5a5dc5c
         }
 
         public static void getRandomPlacePlayer(string name)
@@ -126,6 +149,7 @@ namespace server
                 }
                 if(x>0)
                 {
+<<<<<<< HEAD
                     find.direction = 2;
                     return;
                 }
@@ -143,6 +167,14 @@ namespace server
                 {
                     find.direction = 0;
                     return;
+=======
+                    switch (this.type)
+                    {
+                        case "house": type = "houseB"; lifes = 0; isBlocakble = false; break;
+                        case "tree": type = "treeB"; lifes = 0; isBlocakble = false; break;
+                        default:  forDelete = true; break;
+                    }
+>>>>>>> 71b5d0683f0bb5cdcd35b290b663a44ed5a5dc5c
                 }
             }
         }
@@ -151,6 +183,19 @@ namespace server
         {
             sayList.Add(x);
             if (sayList.Count > sayCount)
+<<<<<<< HEAD
+=======
+            {
+                sayList.RemoveAt(0);
+                sayCount--;
+            }
+        }
+
+        public void MoveY(string name, double y)
+        {
+            playerclass find = playerslist.Where(c => c.name == name).FirstOrDefault();
+            if (find.state != 0)
+>>>>>>> 71b5d0683f0bb5cdcd35b290b663a44ed5a5dc5c
             {
                 sayList.RemoveAt(0);
                 sayCount--;
@@ -192,7 +237,11 @@ namespace server
             return res;
         }
 
+<<<<<<< HEAD
         public string[] GetCommandString(object i, string name)
+=======
+        public object GetCommandString(object i, string name)
+>>>>>>> 71b5d0683f0bb5cdcd35b290b663a44ed5a5dc5c
         {
             if(i is int)
             switch (Convert.ToInt32(i))
@@ -200,8 +249,17 @@ namespace server
                 case 1:
                     return null;
 
+<<<<<<< HEAD
                 case 2: //игрок передал что он оффлайн
                     try
+=======
+                        //Console.WriteLine(" - запрос списка игроков" + DateTime.Now.ToString());
+                        string abv = MyObject.retPlayerList(player.x, player.y) + "&" + MyObject.retBullet(player.x, player.y) + "&" + retSay() + "&" + MyObject.retBlock(player.x, player.y); 
+                        //Console.WriteLine(abv);
+                        return abv;
+                    }
+                    catch
+>>>>>>> 71b5d0683f0bb5cdcd35b290b663a44ed5a5dc5c
                     {
                         var player = manager.players.elements.Where(c => c.name == name).FirstOrDefault();
                         player.isOnline = false;
@@ -224,7 +282,71 @@ namespace server
             }
         }
 
+<<<<<<< HEAD
       
+=======
+       static public void work( object source, ElapsedEventArgs e )
+        {
+            try
+            {
+                foreach (var a in bulletlist)
+                {
+                    a.move();
+                    foreach (var b in playerslist)
+                    {
+                        if (a.nameplayer!=b.name && b.state != 0 && a.explosion(b.x, b.y, b.sizeX, b.sizeY))
+                        {
+                            b.state = 0;
+                            var player = playerslist.Where(c => c.name == a.nameplayer).FirstOrDefault();
+                            player.frags++;
+                            a.forDelele = true;
+                        }
+                    }
+
+
+                    foreach (var b in blockList)
+                    {
+                        if (b.isBlocakble && a.explosion(b.x, b.y, b.sizeX, b.sizeY))
+                        {
+                            b.hit();
+                            a.forDelele = true;
+                        }
+                    }
+
+                    foreach (var b in bulletlist)
+                    {
+                        if (a!=b && a.explosion(b.x, b.y, boxBullet, boxBullet))
+                        {
+                            a.forDelele = true;
+                            b.forDelele = true;
+                        }
+                    }
+                }
+
+
+
+
+                for (int i = bulletlist.Count - 1; i >= 0; i--)
+                {
+                    if (bulletlist[i].forDelele)
+                    {
+                        bulletlist.Remove(bulletlist[i]);
+                    }
+                }
+
+                for (int i = blockList.Count - 1; i >= 0; i--)
+                {
+                    if (blockList[i].forDelete)
+                    {
+                        blockList.Remove(blockList[i]);
+                    }
+                }
+            }
+            catch
+            {
+            }
+        }
+>>>>>>> 71b5d0683f0bb5cdcd35b290b663a44ed5a5dc5c
 
        public void addBlock(string name, int type)
        {
