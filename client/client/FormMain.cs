@@ -9,6 +9,7 @@ using System.Threading;
 using OpenTK.Graphics.OpenGL;
 using NAudio.Wave;
 using render;
+using structureClasses;
 
 namespace client
 {
@@ -22,8 +23,6 @@ namespace client
         [OperationContract]
         bool CreateBullet(string name, double spx, double spy);
         [OperationContract]
-        int state(string name);
-        [OperationContract]
         void say(string say);
         [OperationContract]
         void addBlock(string name, int type);
@@ -32,9 +31,13 @@ namespace client
         [OperationContract]
         void setdirect(string name, int dir);
         [OperationContract]
-        void ping(string name);////////////////////////////////////////empty
+        void ping(string name);
         [OperationContract]
         void respawn(string name);
+        [OperationContract]
+        string getGameObj(int nList, int id, bool update);
+        [OperationContract]
+        int[] getIds(int nlist, string name);
     }
 
    
@@ -91,10 +94,6 @@ namespace client
                 Render.name = textBox2_nickname.Text;
                 string htt = textBox3.Text;
                 if (htt == "") htt = "localhost";
-
-             
-                
-
                 tcpUri = new Uri("http://" + htt + "/");
                 address = new EndpointAddress(tcpUri);
                 binding = new BasicHttpBinding();
@@ -108,7 +107,6 @@ namespace client
                 button3color.Enabled = false;
                 textBox2_nickname.Enabled = false;
                 panel3.Visible = true;
-                Render.playerslist.Clear();
                 textBox3.Enabled = false;
                 backgroundWorker1.RunWorkerAsync();
                 timer2.Enabled = true;
@@ -142,75 +140,24 @@ namespace client
         /// </summary>
         public void method()
         {
-            try
-            {
-                Render.playerslist.Clear();
-                Render.bulletList.Clear();
-                Render.blockList.Clear();
+            service.setdirect(textBox2_nickname.Text, calculateAngle());
+            gameObjPlayer player = Render.playerslist.elements.Where(c => c.name == textBox2_nickname.Text).FirstOrDefault();
 
-                string[] x2 = service.GetCommandString(1, textBox2_nickname.Text);
-                string[] allPla = x2[0].Split('\n');
-                string[] allBull = x2[1].Split('\n');
-                sayString = x2[2];
-                string[] allBlock = x2[3].Split('\n');
+            Render.playerslist.update(service.getIds(0, textBox2_nickname.Text));
+            Render.bulletList.update(service.getIds(1, textBox2_nickname.Text));
+            Render.blockList.update(service.getIds(2, textBox2_nickname.Text));
 
-                for (int i = 0; i < allPla.GetLength(0); i++)
-                {
-                    if (allPla[i] == "" || allPla[i] == " ") continue;
-                    string[] temp = allPla[i].Split('\t');
-                    Render.playerclass p = new Render.playerclass(temp[0], Convert.ToDouble(temp[6]), Convert.ToDouble(temp[7]));
-                    p.state = Convert.ToInt32(temp[1]);
-                    p.direction = Convert.ToInt32(temp[2]);
-                    p.headDir = Convert.ToInt32(temp[8]);
-                    p.frags = Convert.ToInt32(temp[9]);
-                    string[] colStr = temp[3].Split('_');
-                    p.color = Color.FromArgb(Convert.ToInt32(colStr[0]), Convert.ToInt32(colStr[1]), Convert.ToInt32(colStr[2]));
-
-                    p.x = Convert.ToDouble(temp[4]);
-                    p.y = Convert.ToDouble(temp[5]);
-
-                    if (p.name == Render.name) 
-                    {
-                        p.headDir = calculateAngle();
-                        service.setdirect(p.name, p.headDir);
-                    }
-                    Render.playerslist.Add(p);
-                }
-
-                for (int i = 0; i < allBull.GetLength(0); i++)
-                {
-                    if (allBull[i] == "" || allBull[i] == " ") continue;
-
-                    string[] temp = allBull[i].Split('\t');
-                    Render.bullet b = new Render.bullet(Convert.ToDouble(temp[0]), Convert.ToDouble(temp[1]));
-                    Render.bulletList.Add(b);
-                }
-
-                for (int i = 0; i < allBlock.GetLength(0); i++)
-                {
-                    if (allBlock[i] == "" || allBlock[i] == " ") continue;
-                    string[] temp = allBlock[i].Split('\t');
-                    Render.block b = new Render.block(Convert.ToDouble(temp[0]), Convert.ToDouble(temp[1]), temp[2], Convert.ToInt32(temp[3]), Convert.ToDouble(temp[4]), Convert.ToDouble(temp[5]));
-                    string[] colStr = temp[6].Split('_');
-                    b.color = Color.FromArgb(Convert.ToInt32(colStr[0]), Convert.ToInt32(colStr[1]), Convert.ToInt32(colStr[2]));
-                    Render.blockList.Add(b);
-                }
-                
-            }
-            catch (Exception ex)
-            {
-                sayString += ex.Message + Environment.NewLine;
-            }
+            Render.playerslist.clearDeleted();
+            Render.bulletList.clearDeleted();
+            Render.blockList.clearDeleted();
         }
-
-    
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
             try
             {
                 if (button2.Enabled) return;
-                var player = Render.playerslist.Where(c => c.name == textBox2_nickname.Text).FirstOrDefault();
+                var player = Render.playerslist.elements.Where(c => c.name == textBox2_nickname.Text).FirstOrDefault();
                 if (player == null) return;
                 if (player.state == 0) return;
 
@@ -243,7 +190,7 @@ namespace client
                         List<string> l1 = new List<string>();
                         List<Color> l2 = new List<Color>();
                         List<int> l3 = new List<int>();
-                        foreach(var a in Render.playerslist)
+                        foreach(var a in Render.playerslist.elements)
                         {
                             l1.Add(a.name);
                             l2.Add(a.color);
@@ -266,16 +213,16 @@ namespace client
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             method();
-            Thread.Sleep(50);
+            Thread.Sleep(30);
         }
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             try
             {
-                var player = Render.playerslist.Where(c => c.name == textBox2_nickname.Text).FirstOrDefault();
+                var player = Render.playerslist.elements.Where(c => c.name == textBox2_nickname.Text).FirstOrDefault();
                 this.Text = "Подбито: " + player.frags;
-                this.label3coord.Text = "x: " + ((int)player.x).ToString() + "  y: " + ((int)player.y).ToString();
+                this.label3coord.Text = Render.coordPlayer;
                 if ((player.state == 0) && (panel4.Visible == false))
                     panel4.Visible = true;
                 if (player.state == 1) panel4.Visible = false;
@@ -340,6 +287,15 @@ namespace client
             Render.texBlocks.Add("car", new Render.Textures(@"tex/car.png"));
             Render.texBlocks.Add("carB", new Render.Textures(@"tex/carB.png"));
 
+            Render.playerslist.updElem = getPlayerUpdates;
+            Render.playerslist.createElem = getFullPlayer;
+
+            Render.bulletList.updElem = getBulletsUpd;
+            Render.bulletList.createElem = getFullBullet;
+
+            Render.blockList.updElem = getBlocksUpd;
+            Render.blockList.createElem = getFullBlock;
+
             waveOut.Init(loop);
             waveOut.Play();
             waveOut.Pause();
@@ -355,11 +311,6 @@ namespace client
         {
             colorDialog1.ShowDialog();
             button3color.BackColor = colorDialog1.Color;
-        }
-
-        private void button4playerList_Click(object sender, EventArgs e)
-        {
-            
         }
 
         private void Form1_Resize(object sender, EventArgs e)
@@ -437,7 +388,7 @@ namespace client
             try
             {
                 if (button2.Enabled) return;
-                var player = Render.playerslist.Where(c => c.name == textBox2_nickname.Text).FirstOrDefault();
+                var player = Render.playerslist.elements.Where(c => c.name == textBox2_nickname.Text).FirstOrDefault();
                 if (player == null) return;
                 if (player.state == 0) return;
                 dPoint t = calculateSpeed(player.headDir);
@@ -455,7 +406,7 @@ namespace client
         {
             try
             {
-                var player = Render.playerslist.Where(c => c.name == textBox2_nickname.Text).FirstOrDefault();
+                var player = Render.playerslist.elements.Where(c => c.name == textBox2_nickname.Text).FirstOrDefault();
                 service.respawn(player.name);
                 Thread.Sleep(100);
                 panel4.Visible = false;
@@ -515,6 +466,37 @@ namespace client
             }
         }
 
+        string getPlayerUpdates(int id)
+        {
+            string res = service.getGameObj(0, id, true);
+            return res;
+        }
+        gameObjPlayer getFullPlayer(int id)
+        {
+            gameObjPlayer pl = new gameObjPlayer();
+            pl.setObj(service.getGameObj(0, id, false));
+            return pl;
+        }
+        string getBulletsUpd(int id)
+        {
+            return service.getGameObj(1, id, true);
+        }
+        gameObjBullet getFullBullet(int id)
+        {
+            gameObjBullet b = new gameObjBullet();
+            b.setObj(service.getGameObj(1, id, false));
+            return b;
+        }
+        string getBlocksUpd(int id)
+        {
+            return service.getGameObj(2, id, true);
+        }
+        gameObjBlock getFullBlock(int id)
+        {
+            gameObjBlock b = new gameObjBlock();
+            b.setObj(service.getGameObj(2, id, false));
+            return b;
+        }
     }
 
     class dPoint

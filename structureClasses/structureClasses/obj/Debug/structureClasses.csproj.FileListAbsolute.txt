@@ -1,0 +1,5 @@
+C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgameGT\wcfGmae\structureClasses\structureClasses\bin\Debug\structureClasses.dll
+C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgameGT\wcfGmae\structureClasses\structureClasses\bin\Debug\structureClasses.pdb
+C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgameGT\wcfGmae\structureClasses\structureClasses\obj\Debug\structureClasses.csprojResolveAssemblyReference.cache
+C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgameGT\wcfGmae\structureClasses\structureClasses\obj\Debug\structureClasses.dll
+C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgameGT\wcfGmae\structureClasses\structureClasses\obj\Debug\structureClasses.pdb

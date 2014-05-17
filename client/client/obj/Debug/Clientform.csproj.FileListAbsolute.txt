@@ -71,3 +71,5 @@ C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\giWcfGame\wcfGmae
 C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\giWcfGame\wcfGmae\client\client\obj\Debug\client.FormPlayerList.resources
 C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\giWcfGame\wcfGmae\client\client\obj\Debug\client.Properties.Resources.resources
 C:\Users\www.mobilkom.ru\Documents\Visual Studio 2013\Projects\giWcfGame\wcfGmae\client\client\obj\Debug\Clientform.csproj.GenerateResource.Cache
+C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgameGT\wcfGmae\client\client\bin\Debug\structureClasses.dll
+C:\Users\user\Documents\Visual Studio 2010\Projects\wcfgameGT\wcfGmae\client\client\bin\Debug\structureClasses.pdb

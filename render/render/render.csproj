@@ -43,6 +43,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Debug\OpenTK.GLControl.dll</HintPath>
     </Reference>
+    <Reference Include="structureClasses">
+      <HintPath>..\..\structureClasses\structureClasses\bin\Debug\structureClasses.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />

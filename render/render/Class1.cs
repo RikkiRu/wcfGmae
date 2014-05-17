@@ -5,14 +5,16 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
+using structureClasses;
 
 namespace render
 {
     public class Render
     {
-        public static List<playerclass> playerslist = new List<playerclass>();
-        public static List<bullet> bulletList = new List<bullet>();
-        public static List<block> blockList = new List<block>();
+        public static gameList<gameObjPlayer> playerslist = new gameList<gameObjPlayer>();
+        public static gameList<gameObjBullet> bulletList = new gameList<gameObjBullet>();
+        public static gameList<gameObjBlock> blockList = new gameList<gameObjBlock>();
+
         public static string name;
         public static string coordPlayer = "";
         public static int zoom=1;
@@ -89,90 +91,29 @@ namespace render
         public static float ortoX;
         public static float ortoY;
 
-        public class playerclass
-        {
-            public string name;
-            public double x;
-            public double y;
-            public Color color;
-            public int direction;
-            public int state;
-            public double sizeX;
-            public double sizeY;
-            public int headDir;
-            public int frags;
-
-            public playerclass(string _name, double sizex, double sizey)
-            {
-                name = _name;
-                x = 50;
-                y = 50;
-                color = Color.White;
-                state = 1;
-                sizeX = sizex;
-                sizeY = sizey;
-            }
-        }
-
-        public class bullet
-        {
-            public double x;
-            public double y;
-
-
-            public bullet(double x, double y)
-            {
-                this.x = x;
-                this.y = y;
-            }
-        }
-
-        public class block
-        {
-            public double x;
-            public double y;
-            public double sizeX;
-            public double sizeY;
-            public string type;
-            public int lifes = 5;
-            public int dir;
-            public bool forDelete = false;
-            public Color color;
-
-            public block(double x, double y, string type, int dir, double sizeX, double sizeY)
-            {
-                this.x = x;
-                this.y = y;
-                this.type = type;
-                this.dir = dir;
-                this.sizeX = sizeX;
-                this.sizeY = sizeY;
-                this.color = Color.White;
-            }
-        }
-
         public static void RenderMain()
         {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.LoadIdentity();
 
-            var player = playerslist.Where(c => c.name == name).FirstOrDefault();
+            var player = playerslist.elements.Where(c => c.name == name).FirstOrDefault();
             double tX = -player.x + ortoX / 2;
             double tY = -player.y + ortoY / 2;
             GL.Translate(tX, tY, 0);
-            coordPlayer = player.x.ToString() + " " + player.y.ToString();
+            //coordPlayer = player.x.ToString() + " " + player.y.ToString();
+            coordPlayer = "x: "+((int)player.x).ToString() +"   y: "+ ((int)player.y).ToString();
 
-            foreach (var a in blockList)
+            foreach (var a in blockList.elements)
             {
                 GL.Color3(a.color);
                 GL.PushMatrix();
                 GL.Translate(a.x, a.y, 0);
-                GL.Rotate(a.dir, 0, 0, 1);
+                GL.Rotate(a.direction, 0, 0, 1);
                 drawQuad(texBlocks[a.type], - a.sizeX, - a.sizeY, a.sizeX, a.sizeY); 
                 GL.PopMatrix(); 
             }
 
-            foreach (var a in playerslist)
+            foreach (var a in playerslist.elements)
             {
                 if (a.state != 1)
                 {
@@ -187,7 +128,7 @@ namespace render
                 }
             }
 
-            foreach (var a in playerslist)
+            foreach (var a in playerslist.elements)
             {
                 if (a.state == 1)
                 {
@@ -204,12 +145,12 @@ namespace render
                     GL.Translate(a.x, a.y, 0);
                     GL.Rotate(a.headDir, 0, 0, 1);
                     drawQuad(texTankHead, -a.sizeX * 1.5, -a.sizeY * 1.5f, a.sizeX * 1.5f, a.sizeY * 1.5f);
-                    GL.PopMatrix(); 
+                    GL.PopMatrix();
                 }
             }
 
             GL.Color3(Color.White);
-            foreach (var a in bulletList)
+            foreach (var a in bulletList.elements)
             {
                 drawQuad(texBullet, a.x - 2, a.y - 2, a.x + 2, a.y + 2);
             }
