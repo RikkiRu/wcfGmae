@@ -8,7 +8,7 @@ namespace structureClasses
 {
     public class gameObj
     {
-        public const int fields = 6;
+        public const int fields = 7;
         public int id;
         public double x;
         public double y;
@@ -74,6 +74,7 @@ namespace structureClasses
             res = addField(res, y.ToString());
             res = addField(res, "");
             res = addField(res, "");
+            res = addField(res, "");
             return res;
         }
 
@@ -85,6 +86,7 @@ namespace structureClasses
             res = addField(res, y.ToString());
             res = addField(res, sizeX.ToString());
             res = addField(res, sizeY.ToString());
+            res = addField(res, nonUpdatable.ToString());
             return res;
         }
 
@@ -102,6 +104,7 @@ namespace structureClasses
             this.y = Convert.ToDouble(temp[3]);
             this.sizeX = Convert.ToDouble(temp[4]);
             this.sizeY = Convert.ToDouble(temp[5]);
+            this.nonUpdatable = Convert.ToBoolean(temp[6]);
         }
     }
 
@@ -207,7 +210,7 @@ namespace structureClasses
 
     public class gameObjBlock : gameObjColoredDirected
     {
-        new public const int fields = gameObjColoredDirected.fields + 2;
+        new public const int fields = gameObjColoredDirected.fields + 3;
 
         public bool isBlocakble;
         public string type;
@@ -218,6 +221,7 @@ namespace structureClasses
             string res = base.getFast();
             res = addField(res, type);
             res = addField(res, lifes.ToString());
+            res = addField(res, "");
             return res;
         }
 
@@ -226,6 +230,7 @@ namespace structureClasses
             string res = base.getFull();
             res = addField(res, type);
             res = addField(res, lifes.ToString());
+            res = addField(res, isBlocakble.ToString());
             return res;
         }
 
@@ -241,6 +246,7 @@ namespace structureClasses
             base.makeObj();
             this.type = temp[gameObjColoredDirected.fields];
             this.lifes = Convert.ToInt32(temp[gameObjColoredDirected.fields + 1]);
+            this.isBlocakble = Convert.ToBoolean(temp[gameObjColoredDirected.fields + 2]);
         }
     }
 

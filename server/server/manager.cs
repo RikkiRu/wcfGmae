@@ -38,9 +38,9 @@ namespace server
                     {
                         switch (a.type)
                         {
-                            case "tree": a.type = "treeB"; a.isBlocakble = false; return true;
-                            case "houseD": a.type = "houseB"; a.isBlocakble = false; return true;
-                            case "car": a.type = "carB"; a.isBlocakble = false; return true;
+                            case "tree": a.type = "treeB"; a.isBlocakble = false; p.nonUpdatable = true; return true;
+                            case "houseD": a.type = "houseB"; a.isBlocakble = false; p.nonUpdatable = true; return true;
+                            case "car": a.type = "carB"; a.isBlocakble = false; p.nonUpdatable = true; return true;
                         }
                         return false;
                     }
@@ -66,9 +66,9 @@ namespace server
                     switch (p.type)
                     {
                         case "house": p.type = "houseD"; p.lifes = 0; break;
-                        case "houseD": p.type = "houseB"; p.isBlocakble = false; break;
-                        case "car": p.type = "carB"; p.isBlocakble = false; break;
-                        case "tree": p.type = "treeB"; p.isBlocakble = false; break;
+                        case "houseD": p.type = "houseB"; p.isBlocakble = false; p.nonUpdatable = true; break;
+                        case "car": p.type = "carB"; p.isBlocakble = false; p.nonUpdatable = true; break;
+                        case "tree": p.type = "treeB"; p.isBlocakble = false; p.nonUpdatable = true; break;
                         default: p.forDelete = true; break;
                     }
                 }

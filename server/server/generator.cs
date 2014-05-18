@@ -58,6 +58,7 @@ namespace server
         public static gameObjBlock add(double px, double py, string type, int lifes, bool isBlockable, int dir, double sizeX, double sizeY)
         {
             gameObjBlock b = new gameObjBlock();
+            if (type == "road") b.nonUpdatable = true;
             b.x = px;
             b.y = py;
             b.type = type;

@@ -18,6 +18,7 @@ namespace render
         public static string name;
         public static string coordPlayer = "";
         public static int zoom=1;
+        public static int visibleDistance = 200;
 
         public class Textures : IDisposable
         {
@@ -91,6 +92,20 @@ namespace render
         public static float ortoX;
         public static float ortoY;
 
+        public static bool IsInDistance(double x, double y, double ax, double ay, double distX, double distY)
+        {
+            double dx;
+            double dy;
+
+            if (ax > x) dx = ax - x;
+            else dx = x - ax;
+            if (ay > y) dy = ay - y;
+            else dy = y - ay;
+
+            if (dx < distX && dy < distY) return true;
+            return false;
+        }
+
         public static void RenderMain()
         {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
@@ -105,6 +120,7 @@ namespace render
 
             foreach (var a in blockList.elements)
             {
+                if (!IsInDistance(player.x, player.y, a.x, a.y, visibleDistance, visibleDistance)) continue;
                 GL.Color3(a.color);
                 GL.PushMatrix();
                 GL.Translate(a.x, a.y, 0);
@@ -117,6 +133,7 @@ namespace render
             {
                 if (a.state != 1)
                 {
+                    if (!IsInDistance(player.x, player.y, a.x, a.y, visibleDistance, visibleDistance)) continue;
                     GL.PushMatrix();
                     Color t = a.color;
                     GL.Color3(t);
@@ -132,6 +149,7 @@ namespace render
             {
                 if (a.state == 1)
                 {
+                    if (!IsInDistance(player.x, player.y, a.x, a.y, visibleDistance, visibleDistance)) continue;
                     GL.PushMatrix();
                     Color t = a.color;
                     GL.Color3(t);
