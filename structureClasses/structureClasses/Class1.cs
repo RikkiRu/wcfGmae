@@ -291,6 +291,7 @@ namespace structureClasses
             {
                 if (IsInDistance(x, y, a.x, a.y, radius, radius))
                 {
+                    if (a is gameObjPlayer) if ((a as gameObjPlayer).isOnline == false) continue;
                     reList.Add(a.id);
                 }
             }

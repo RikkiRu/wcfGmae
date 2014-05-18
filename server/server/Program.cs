@@ -71,6 +71,8 @@ namespace server
                 if (rand.Next(0, 2) == 0) player.x += 100 * mod;
                 else player.y += 100 * mod;
             }
+            player.x = 10;
+            player.y = 0;
         }
 
         public bool CreateBullet(string name, double spx, double spy)
@@ -291,6 +293,8 @@ namespace server
         {
             gameObjPlayer player = manager.players.elements.Where(c => c.name == name).FirstOrDefault();
             if (player == null) return null;
+
+            player.isOnline = true;
             double cx = player.x;
             double cy = player.y;
 
@@ -327,6 +331,21 @@ namespace server
             time.Start();
             timerSlow.Elapsed += new ElapsedEventHandler(MyObject.setOffline);
             timerSlow.Start();
+
+            for (int i = 0; i < 5; i++)
+            {
+                gameObjPlayer pl = new gameObjPlayer();
+                pl.name = "bot"+i.ToString();
+                pl.color = Color.White;
+                pl.password = "bot";
+                pl.state = 1;
+                pl.sizeX = 10;
+                pl.sizeY = 10;
+                pl.y = i * 10;
+                pl.isOnline = true;
+                manager.players.elements.Add(pl);
+            }
+
             Console.ReadLine();
 
             host.Close();

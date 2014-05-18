@@ -38,7 +38,7 @@ namespace server
                             res.Add(add(px, py, "road", 0, false, 0, sizeX, sizeY));
                             if (rand.Next(0, 3) == 0)
                             {
-                                var a = add(px, py, "car", rand.Next(0, 360), true, 0, sizeX / 2, sizeY / 2);
+                                var a = add(px, py, "car", 0, true, rand.Next(0, 360), sizeX / 2, sizeY / 2);
                                 a.color = Color.FromArgb(rand.Next(100, 256), rand.Next(100, 256), rand.Next(100, 256));
                                 res.Add(a);
                             }
