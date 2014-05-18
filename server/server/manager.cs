@@ -19,7 +19,7 @@ namespace server
         {
             public bool tryMove(int id, double x, double y)
             {
-                gameObjPlayer p = elements.Where(c => c.id == id).First();
+                gameObjPlayer p = elements.Where(c => c.id == id).FirstOrDefault();
                 if (p == null) return false;
 
                 double dx = p.x + x;
